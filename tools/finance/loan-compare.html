@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贷款对比计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/finance.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">贷款对比</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/finance.html" class="nav-link active">理财金融</a>
+                        <a href="../../pages/shopping.html" class="nav-link">消费购物</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/finance.html" class="breadcrumb-link">理财金融</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">贷款对比</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">贷款对比计算器</h1>
+                            <p class="calculator-description">
+                                比较不同贷款方案，计算月供、总利息和总还款额，帮助您选择最优贷款方案。
+                            </p>
+                        </div>
+                        
+                        <div class="loan-comparison">
+                            <!-- 贷款方案A -->
+                            <div class="loan-plan">
+                                <h3 class="plan-title"><i class="fas fa-home"></i> 贷款方案 A</h3>
+                                <div class="input-group">
+                                    <label class="input-label">贷款金额 (元)</label>
+                                    <input type="number" id="loanA_principal" class="input-field" placeholder="例如：300000" value="300000">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">年利率 (%)</label>
+                                    <input type="number" id="loanA_rate" class="input-field" placeholder="例如：4.5" value="4.5" step="0.01">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">贷款期限 (年)</label>
+                                    <input type="number" id="loanA_years" class="input-field" placeholder="例如：20" value="20">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">还款方式</label>
+                                    <select id="loanA_type" class="input-field">
+                                        <option value="equal_principal_interest">等额本息</option>
+                                        <option value="equal_principal">等额本金</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- 贷款方案B -->
+                            <div class="loan-plan">
+                                <h3 class="plan-title"><i class="fas fa-home"></i> 贷款方案 B</h3>
+                                <div class="input-group">
+                                    <label class="input-label">贷款金额 (元)</label>
+                                    <input type="number" id="loanB_principal" class="input-field" placeholder="例如：300000" value="300000">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">年利率 (%)</label>
+                                    <input type="number" id="loanB_rate" class="input-field" placeholder="例如：4.9" value="4.9" step="0.01">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">贷款期限 (年)</label>
+                                    <input type="number" id="loanB_years" class="input-field" placeholder="例如：20" value="20">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">还款方式</label>
+                                    <select id="loanB_type" class="input-field">
+                                        <option value="equal_principal_interest">等额本息</option>
+                                        <option value="equal_principal">等额本金</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="compareBtn">
+                            <i class="fas fa-balance-scale"></i> 对比贷款方案
+                        </button>
+                        
+                        <!-- 对比结果 -->
+                        <div class="result-display" id="compareResult" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 贷款方案对比</h3>
+                            
+                            <div class="comparison-results">
+                                <div class="comparison-grid">
+                                    <div class="comparison-header">
+                                        <div class="comparison-cell">对比项目</div>
+                                        <div class="comparison-cell plan-a">方案A</div>
+                                        <div class="comparison-cell plan-b">方案B</div>
+                                        <div class="comparison-cell difference">差额</div>
+                                    </div>
+                                    
+                                    <div class="comparison-row">
+                                        <div class="comparison-cell">月供</div>
+                                        <div class="comparison-cell plan-a" id="monthlyA">0.00元</div>
+                                        <div class="comparison-cell plan-b" id="monthlyB">0.00元</div>
+                                        <div class="comparison-cell difference" id="monthlyDiff">0.00元</div>
+                                    </div>
+                                    
+                                    <div class="comparison-row">
+                                        <div class="comparison-cell">总利息</div>
+                                        <div class="comparison-cell plan-a" id="interestA">0.00元</div>
+                                        <div class="comparison-cell plan-b" id="interestB">0.00元</div>
+                                        <div class="comparison-cell difference" id="interestDiff">0.00元</div>
+                                    </div>
+                                    
+                                    <div class="comparison-row">
+                                        <div class="comparison-cell">总还款额</div>
+                                        <div class="comparison-cell plan-a" id="totalA">0.00元</div>
+                                        <div class="comparison-cell plan-b" id="totalB">0.00元</div>
+                                        <div class="comparison-cell difference" id="totalDiff">0.00元</div>
+                                    </div>
+                                    
+                                    <div class="comparison-row">
+                                        <div class="comparison-cell">利息占比</div>
+                                        <div class="comparison-cell plan-a" id="interestRatioA">0.00%</div>
+                                        <div class="comparison-cell plan-b" id="interestRatioB">0.00%</div>
+                                        <div class="comparison-cell difference" id="ratioDiff">0.00%</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 推荐方案 -->
+                                <div class="recommendation" id="recommendation">
+                                    <h4 class="result-title" style="font-size: 1rem; margin-top: 1.5rem;">
+                                        <i class="fas fa-lightbulb"></i> 推荐方案
+                                    </h4>
+                                    <p id="recommendationText">正在计算最优方案...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>使用说明：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>等额本息</strong>：每月还款金额固定，适合收入稳定的借款人</li>
+                                    <li><strong>等额本金</strong>：前期还款压力大，但总利息支出较少</li>
+                                    <li>比较时请综合考虑月供金额、总利息支出和自身还款能力</li>
+                                    <li>实际贷款条件可能因银行政策和个人信用状况而有所不同</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">理财工具</h4>
+                    <a href="interest.html" class="footer-link">利息计算器</a>
+                    <a href="loan-compare.html" class="footer-link">贷款对比</a>
+                    <a href="investment.html" class="footer-link">投资收益计算</a>
+                    <a href="compound.html" class="footer-link">复利计算</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/finance.html" class="footer-link">返回理财金融</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../shopping/discount.html" class="footer-link">折扣计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 贷款对比计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item active">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 计算贷款详情
+        function calculateLoan(principal, annualRate, years, type) {
+            const monthlyRate = annualRate / 100 / 12;
+            const months = years * 12;
+            
+            let monthlyPayment = 0;
+            let totalInterest = 0;
+            let totalRepayment = 0;
+            
+            if (type === 'equal_principal_interest') {
+                // 等额本息公式
+                const temp = Math.pow(1 + monthlyRate, months);
+                monthlyPayment = principal * monthlyRate * temp / (temp - 1);
+                totalRepayment = monthlyPayment * months;
+                totalInterest = totalRepayment - principal;
+            } else {
+                // 等额本金
+                const monthlyPrincipal = principal / months;
+                totalInterest = 0;
+                let remainingPrincipal = principal;
+                
+                for (let i = 0; i < months; i++) {
+                    const monthlyInterest = remainingPrincipal * monthlyRate;
+                    totalInterest += monthlyInterest;
+                    remainingPrincipal -= monthlyPrincipal;
+                }
+                
+                totalRepayment = principal + totalInterest;
+                monthlyPayment = monthlyPrincipal + principal * monthlyRate; // 首月还款额
+            }
+            
+            return {
+                monthlyPayment: monthlyPayment,
+                totalInterest: totalInterest,
+                totalRepayment: totalRepayment,
+                interestRatio: (totalInterest / totalRepayment * 100)
+            };
+        }
+        
+        // 对比贷款方案
+        document.getElementById('compareBtn').addEventListener('click', function() {
+            // 获取方案A数据
+            const principalA = parseFloat(document.getElementById('loanA_principal').value) || 0;
+            const rateA = parseFloat(document.getElementById('loanA_rate').value) || 0;
+            const yearsA = parseFloat(document.getElementById('loanA_years').value) || 0;
+            const typeA = document.getElementById('loanA_type').value;
+            
+            // 获取方案B数据
+            const principalB = parseFloat(document.getElementById('loanB_principal').value) || 0;
+            const rateB = parseFloat(document.getElementById('loanB_rate').value) || 0;
+            const yearsB = parseFloat(document.getElementById('loanB_years').value) || 0;
+            const typeB = document.getElementById('loanB_type').value;
+            
+            // 计算方案A
+            const loanA = calculateLoan(principalA, rateA, yearsA, typeA);
+            
+            // 计算方案B
+            const loanB = calculateLoan(principalB, rateB, yearsB, typeB);
+            
+            // 更新方案A结果
+            document.getElementById('monthlyA').textContent = loanA.monthlyPayment.toFixed(2) + '元';
+            document.getElementById('interestA').textContent = loanA.totalInterest.toFixed(2) + '元';
+            document.getElementById('totalA').textContent = loanA.totalRepayment.toFixed(2) + '元';
+            document.getElementById('interestRatioA').textContent = loanA.interestRatio.toFixed(2) + '%';
+            
+            // 更新方案B结果
+            document.getElementById('monthlyB').textContent = loanB.monthlyPayment.toFixed(2) + '元';
+            document.getElementById('interestB').textContent = loanB.totalInterest.toFixed(2) + '元';
+            document.getElementById('totalB').textContent = loanB.totalRepayment.toFixed(2) + '元';
+            document.getElementById('interestRatioB').textContent = loanB.interestRatio.toFixed(2) + '%';
+            
+            // 计算差额
+            const monthlyDiff = loanA.monthlyPayment - loanB.monthlyPayment;
+            const interestDiff = loanA.totalInterest - loanB.totalInterest;
+            const totalDiff = loanA.totalRepayment - loanB.totalRepayment;
+            const ratioDiff = loanA.interestRatio - loanB.interestRatio;
+            
+            // 更新差额显示
+            document.getElementById('monthlyDiff').textContent = monthlyDiff.toFixed(2) + '元';
+            document.getElementById('interestDiff').textContent = interestDiff.toFixed(2) + '元';
+            document.getElementById('totalDiff').textContent = totalDiff.toFixed(2) + '元';
+            document.getElementById('ratioDiff').textContent = ratioDiff.toFixed(2) + '%';
+            
+            // 设置差额样式
+            const diffCells = document.querySelectorAll('.difference');
+            diffCells.forEach(cell => {
+                const value = parseFloat(cell.textContent);
+                if (value < 0) {
+                    cell.style.color = '#10b981'; // 绿色表示更好
+                } else if (value > 0) {
+                    cell.style.color = '#ef4444'; // 红色表示更差
+                } else {
+                    cell.style.color = 'var(--text-primary)';
+                }
+            });
+            
+            // 推荐方案
+            let recommendation = '';
+            if (totalDiff < 0) {
+                recommendation = '推荐选择 <strong>方案A</strong>，总还款额更低，可节省 ' + Math.abs(totalDiff).toFixed(2) + ' 元。';
+            } else if (totalDiff > 0) {
+                recommendation = '推荐选择 <strong>方案B</strong>，总还款额更低，可节省 ' + totalDiff.toFixed(2) + ' 元。';
+            } else {
+                recommendation = '两个方案总还款额相同，可根据月供承受能力选择。';
+            }
+            
+            // 如果月供差异大，给出额外建议
+            if (Math.abs(monthlyDiff) > 500) {
+                if (monthlyDiff < 0) {
+                    recommendation += ' 方案A月供更低，还款压力较小。';
+                } else {
+                    recommendation += ' 方案B月供更低，还款压力较小。';
+                }
+            }
+            
+            document.getElementById('recommendationText').innerHTML = recommendation;
+            
+            // 显示结果
+            document.getElementById('compareResult').style.display = 'block';
+        });
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            document.getElementById('compareBtn').click();
+        });
+    </script>
+    
+    <style>
+        .loan-comparison {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .loan-comparison {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .loan-plan {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .plan-title {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .comparison-header {
+            display: contents;
+            font-weight: 600;
+            background-color: var(--gray-100);
+        }
+        
+        .comparison-row {
+            display: contents;
+        }
+        
+        .comparison-cell {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .comparison-header .comparison-cell {
+            background-color: var(--gray-100);
+            font-weight: 600;
+        }
+        
+        .comparison-cell:first-child {
+            font-weight: 500;
+        }
+        
+        .plan-a {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        
+        .plan-b {
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+        
+        .recommendation {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            margin-top: 1.5rem;
+        }
+        
+        .recommendation p {
+            margin-bottom: 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                font-size: 0.875rem;
+            }
+            
+            .comparison-cell {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                padding: 0.5rem;
+            }
+            
+            .comparison-cell::before {
+                content: attr(data-label);
+                font-weight: 600;
+                grid-column: 1;
+            }
+        }
+    </style>
+</body>
+</html>
