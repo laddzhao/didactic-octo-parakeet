@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复利计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/finance.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">复利计算器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/finance.html" class="nav-link active">理财金融</a>
+                        <a href="../../pages/shopping.html" class="nav-link">消费购物</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/finance.html" class="breadcrumb-link">理财金融</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">复利计算器</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">复利计算器</h1>
+                            <p class="calculator-description">
+                                计算复利收益，展示时间对财富增长的威力，支持多种复利频率和投资方案。
+                            </p>
+                        </div>
+                        
+                        <!-- 计算类型选择 -->
+                        <div class="tabs" id="compoundTabs">
+                            <button class="tab active" data-type="basic">基础复利计算</button>
+                            <button class="tab" data-type="regular">定期投资复利</button>
+                            <button class="tab" data-type="goal">目标金额计算</button>
+                        </div>
+                        
+                        <!-- 基础复利计算 -->
+                        <div id="basicSection">
+                            <div class="input-group">
+                                <label class="input-label">本金金额 (元)</label>
+                                <input type="number" id="basicPrincipal" class="input-field" placeholder="例如：10000" value="10000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年利率 (%)</label>
+                                <input type="number" id="basicRate" class="input-field" placeholder="例如：5.0" value="5.0" step="0.1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">投资年限</label>
+                                <input type="number" id="basicYears" class="input-field" placeholder="例如：10" value="10">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">复利频率</label>
+                                <select id="compoundFrequency" class="input-field">
+                                    <option value="yearly">每年复利</option>
+                                    <option value="semi-annually">每半年复利</option>
+                                    <option value="quarterly">每季度复利</option>
+                                    <option value="monthly">每月复利</option>
+                                    <option value="daily">每日复利</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">是否考虑通货膨胀</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="inflationToggle">
+                                    <label for="inflationToggle" class="toggle-slider"></label>
+                                    <span class="toggle-label">考虑通货膨胀</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 通货膨胀选项 -->
+                            <div id="inflationOptions" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">通货膨胀率 (%)</label>
+                                    <input type="number" id="inflationRate" class="input-field" placeholder="例如：2.5" value="2.5" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 定期投资复利 -->
+                        <div id="regularSection" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">初始投资金额 (元)</label>
+                                <input type="number" id="regularInitial" class="input-field" placeholder="例如：5000" value="5000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">每期追加金额 (元)</label>
+                                <input type="number" id="regularAdditional" class="input-field" placeholder="例如：1000" value="1000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">追加频率</label>
+                                <select id="additionalFrequency" class="input-field">
+                                    <option value="monthly">每月追加</option>
+                                    <option value="quarterly">每季度追加</option>
+                                    <option value="yearly">每年追加</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">投资年限</label>
+                                <input type="number" id="regularYears" class="input-field" placeholder="例如：20" value="20">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年利率 (%)</label>
+                                <input type="number" id="regularRate" class="input-field" placeholder="例如：6.0" value="6.0" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- 目标金额计算 -->
+                        <div id="goalSection" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">目标金额 (元)</label>
+                                <input type="number" id="goalAmount" class="input-field" placeholder="例如：1000000" value="1000000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">初始投资金额 (元)</label>
+                                <input type="number" id="goalInitial" class="input-field" placeholder="例如：10000" value="10000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年利率 (%)</label>
+                                <input type="number" id="goalRate" class="input-field" placeholder="例如：7.0" value="7.0" step="0.1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">复利频率</label>
+                                <select id="goalFrequency" class="input-field">
+                                    <option value="yearly">每年复利</option>
+                                    <option value="semi-annually">每半年复利</option>
+                                    <option value="quarterly">每季度复利</option>
+                                    <option value="monthly">每月复利</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">是否考虑定期追加</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="goalAdditionalToggle">
+                                    <label for="goalAdditionalToggle" class="toggle-slider"></label>
+                                    <span class="toggle-label">定期追加投资</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 目标金额的定期追加选项 -->
+                            <div id="goalAdditionalOptions" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">每期追加金额 (元)</label>
+                                    <input type="number" id="goalAdditionalAmount" class="input-field" placeholder="例如：2000" value="2000">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">追加频率</label>
+                                    <select id="goalAdditionalFrequency" class="input-field">
+                                        <option value="monthly">每月追加</option>
+                                        <option value="yearly">每年追加</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算复利
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 计算结果</h3>
+                            
+                            <!-- 基础复利结果 -->
+                            <div id="basicResult" style="display: block;">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">本金</span>
+                                        <span class="result-value" id="principalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">复利收益</span>
+                                        <span class="result-value" id="compoundInterest">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">本息合计</span>
+                                        <span class="result-value" id="totalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">实际年利率</span>
+                                        <span class="result-value" id="effectiveRate">0.00%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 通货膨胀调整结果 -->
+                                <div id="inflationResult" style="display: none; margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">通货膨胀调整</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">名义价值</span>
+                                            <span class="result-value" id="nominalValue">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">实际价值</span>
+                                            <span class="result-value" id="realValue">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">实际收益率</span>
+                                            <span class="result-value" id="realReturn">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 复利明细 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">复利明细</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">复利次数</span>
+                                            <span class="result-value" id="compoundTimes">0 次</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">复利频率</span>
+                                            <span class="result-value" id="frequencyDisplay">每年</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">名义利率</span>
+                                            <span class="result-value" id="nominalRate">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 复利增长图表 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">复利增长趋势</h4>
+                                    <div class="chart-container">
+                                        <canvas id="compoundChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 定期投资复利结果 -->
+                            <div id="regularResult" style="display: none;">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">初始投资</span>
+                                        <span class="result-value" id="regularInitialResult">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">追加总额</span>
+                                        <span class="result-value" id="totalAdditional">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">总投资额</span>
+                                        <span class="result-value" id="totalRegularInvestment">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">复利收益</span>
+                                        <span class="result-value" id="regularCompoundInterest">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">最终价值</span>
+                                        <span class="result-value" id="regularFinalValue">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">年化收益率</span>
+                                        <span class="result-value" id="regularAnnualizedReturn">0.00%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 定期投资明细 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">投资明细</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">追加次数</span>
+                                            <span class="result-value" id="additionalTimes">0 次</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">追加频率</span>
+                                            <span class="result-value" id="additionalFrequencyDisplay">每月</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">每期追加</span>
+                                            <span class="result-value" id="additionalPerPeriod">0.00 元</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 定期投资图表 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">定期投资增长趋势</h4>
+                                    <div class="chart-container">
+                                        <canvas id="regularChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 目标金额计算结果 -->
+                            <div id="goalResult" style="display: none;">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">目标金额</span>
+                                        <span class="result-value" id="goalTarget">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">需要时间</span>
+                                        <span class="result-value" id="requiredTime">0 年</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">初始投资</span>
+                                        <span class="result-value" id="goalInitialResult">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">复利收益</span>
+                                        <span class="result-value" id="goalCompoundInterest">0.00 元</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 定期追加目标计算结果 -->
+                                <div id="goalAdditionalResult" style="display: none; margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">定期追加计划</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">每期追加</span>
+                                            <span class="result-value" id="goalAdditionalPerPeriod">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">追加次数</span>
+                                            <span class="result-value" id="goalAdditionalTimes">0 次</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">追加总额</span>
+                                            <span class="result-value" id="goalTotalAdditional">0.00 元</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 目标达成计划 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">目标达成计划</h4>
+                                    <div class="timeline">
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">第0年</div>
+                                            <div class="timeline-content">初始投资: <span id="timelineInitial">0元</span></div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">第5年</div>
+                                            <div class="timeline-content">预计价值: <span id="timelineYear5">0元</span></div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">第10年</div>
+                                            <div class="timeline-content">预计价值: <span id="timelineYear10">0元</span></div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">达成目标</div>
+                                            <div class="timeline-content">最终价值: <span id="timelineFinal">0元</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 目标达成图表 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">目标达成进度</h4>
+                                    <div class="chart-container">
+                                        <canvas id="goalChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 复利威力展示 -->
+                    <div class="compound-power mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-bolt"></i> 复利威力
+                        </h3>
+                        <div class="power-examples">
+                            <div class="power-example">
+                                <div class="power-icon">
+                                    <i class="fas fa-piggy-bank"></i>
+                                </div>
+                                <div class="power-content">
+                                    <h4>72法则</h4>
+                                    <p>资金翻倍所需年限 ≈ 72 ÷ 年利率(%)</p>
+                                    <div class="power-result" id="rule72">年利率5%，约14.4年翻倍</div>
+                                </div>
+                            </div>
+                            <div class="power-example">
+                                <div class="power-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="power-content">
+                                    <h4>时间的力量</h4>
+                                    <p>每月投资1000元，年化8%，30年后</p>
+                                    <div class="power-result" id="timePower">约150万元</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>复利奇迹：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>爱因斯坦</strong>称复利为"世界第八大奇迹"</li>
+                                    <li><strong>长期投资</strong>：时间越长，复利效应越明显</li>
+                                    <li><strong>定期追加</strong>：定期投资能显著放大复利效果</li>
+                                    <li><strong>尽早开始</strong>：即使金额较小，早开始也能积累可观财富</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">理财工具</h4>
+                    <a href="interest.html" class="footer-link">利息计算器</a>
+                    <a href="loan-compare.html" class="footer-link">贷款对比</a>
+                    <a href="investment.html" class="footer-link">投资收益计算</a>
+                    <a href="compound.html" class="footer-link">复利计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/finance.html" class="footer-link">返回理财金融</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../shopping/discount.html" class="footer-link">折扣计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 复利计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item active">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <!-- 图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // 标签页切换
+        document.querySelectorAll('#compoundTabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('#compoundTabs .tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                // 显示对应的内容区域
+                document.querySelectorAll('[id$="Section"]').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                document.getElementById(type + 'Section').style.display = 'block';
+                
+                // 显示对应的结果区域
+                document.querySelectorAll('[id$="Result"]').forEach(result => {
+                    result.style.display = 'none';
+                });
+                
+                // 显示结果区域
+                document.getElementById('resultSection').style.display = 'block';
+                
+                // 重新计算
+                setTimeout(() => {
+                    document.getElementById('calculateBtn').click();
+                }, 100);
+            });
+        });
+        
+        // 通货膨胀切换
+        document.getElementById('inflationToggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('inflationOptions').style.display = 'block';
+            } else {
+                document.getElementById('inflationOptions').style.display = 'none';
+            }
+            // 重新计算
+            setTimeout(() => {
+                document.getElementById('calculateBtn').click();
+            }, 100);
+        });
+        
+        // 目标金额定期追加切换
+        document.getElementById('goalAdditionalToggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('goalAdditionalOptions').style.display = 'block';
+            } else {
+                document.getElementById('goalAdditionalOptions').style.display = 'none';
+            }
+        });
+        
+        // 计算复利
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const activeTab = document.querySelector('#compoundTabs .tab.active').dataset.type;
+            
+            if (activeTab === 'basic') {
+                calculateBasicCompound();
+            } else if (activeTab === 'regular') {
+                calculateRegularCompound();
+            } else if (activeTab === 'goal') {
+                calculateGoalCompound();
+            }
+            
+            // 更新复利威力示例
+            updateCompoundExamples();
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        });
+        
+        // 计算基础复利
+        function calculateBasicCompound() {
+            // 获取输入值
+            const principal = parseFloat(document.getElementById('basicPrincipal').value) || 0;
+            const annualRate = parseFloat(document.getElementById('basicRate').value) || 0;
+            const years = parseFloat(document.getElementById('basicYears').value) || 0;
+            const frequency = document.getElementById('compoundFrequency').value;
+            const considerInflation = document.getElementById('inflationToggle').checked;
+            const inflationRate = considerInflation ? (parseFloat(document.getElementById('inflationRate').value) || 0) : 0;
+            
+            // 确定复利频率
+            let n = 1; // 每年复利次数
+            let frequencyText = '每年';
+            
+            switch(frequency) {
+                case 'yearly': n = 1; frequencyText = '每年'; break;
+                case 'semi-annually': n = 2; frequencyText = '每半年'; break;
+                case 'quarterly': n = 4; frequencyText = '每季度'; break;
+                case 'monthly': n = 12; frequencyText = '每月'; break;
+                case 'daily': n = 365; frequencyText = '每日'; break;
+            }
+            
+            // 复利公式: A = P(1 + r/n)^(nt)
+            const ratePerPeriod = annualRate / 100 / n;
+            const periods = years * n;
+            const totalAmount = principal * Math.pow(1 + ratePerPeriod, periods);
+            const compoundInterest = totalAmount - principal;
+            
+            // 计算实际年利率（考虑复利频率）
+            const effectiveAnnualRate = (Math.pow(1 + ratePerPeriod, n) - 1) * 100;
+            
+            // 显示基础结果
+            document.getElementById('principalAmount').textContent = principal.toFixed(2) + ' 元';
+            document.getElementById('compoundInterest').textContent = compoundInterest.toFixed(2) + ' 元';
+            document.getElementById('totalAmount').textContent = totalAmount.toFixed(2) + ' 元';
+            document.getElementById('effectiveRate').textContent = effectiveAnnualRate.toFixed(4) + '%';
+            document.getElementById('compoundTimes').textContent = Math.round(periods) + ' 次';
+            document.getElementById('frequencyDisplay').textContent = frequencyText;
+            document.getElementById('nominalRate').textContent = annualRate.toFixed(2) + '%';
+            
+            // 显示基础结果区域
+            document.getElementById('basicResult').style.display = 'block';
+            document.getElementById('regularResult').style.display = 'none';
+            document.getElementById('goalResult').style.display = 'none';
+            
+            // 通货膨胀调整
+            if (considerInflation && inflationRate > 0) {
+                document.getElementById('inflationResult').style.display = 'block';
+                
+                // 计算实际价值（考虑通货膨胀）
+                const realValue = totalAmount / Math.pow(1 + inflationRate / 100, years);
+                const realReturn = (Math.pow(totalAmount / principal, 1 / years) - 1) * 100 - inflationRate;
+                
+                document.getElementById('nominalValue').textContent = totalAmount.toFixed(2) + ' 元';
+                document.getElementById('realValue').textContent = realValue.toFixed(2) + ' 元';
+                document.getElementById('realReturn').textContent = realReturn.toFixed(2) + '%';
+            } else {
+                document.getElementById('inflationResult').style.display = 'none';
+            }
+            
+            // 绘制复利增长图表
+            drawCompoundChart(principal, annualRate, years, frequency, '基础复利增长');
+        }
+        
+        // 计算定期投资复利
+        function calculateRegularCompound() {
+            // 获取输入值
+            const initial = parseFloat(document.getElementById('regularInitial').value) || 0;
+            const additional = parseFloat(document.getElementById('regularAdditional').value) || 0;
+            const frequency = document.getElementById('additionalFrequency').value;
+            const years = parseFloat(document.getElementById('regularYears').value) || 0;
+            const annualRate = parseFloat(document.getElementById('regularRate').value) || 0;
+            
+            // 确定追加频率
+            let periodsPerYear = 12;
+            let frequencyText = '每月';
+            
+            switch(frequency) {
+                case 'monthly': periodsPerYear = 12; frequencyText = '每月'; break;
+                case 'quarterly': periodsPerYear = 4; frequencyText = '每季度'; break;
+                case 'yearly': periodsPerYear = 1; frequencyText = '每年'; break;
+            }
+            
+            const monthlyRate = annualRate / 100 / 12; // 使用月利率计算
+            const totalMonths = years * 12;
+            
+            // 计算初始投资的未来价值（按月复利）
+            const futureInitial = initial * Math.pow(1 + monthlyRate, totalMonths);
+            
+            // 计算定期追加的未来价值
+            let futureAdditional = 0;
+            
+            if (frequency === 'monthly') {
+                // 每月追加，使用普通年金公式
+                futureAdditional = additional * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+            } else if (frequency === 'quarterly') {
+                // 每季度追加，转换为季度利率
+                const quarterlyRate = Math.pow(1 + monthlyRate, 3) - 1;
+                const totalQuarters = years * 4;
+                futureAdditional = additional * (Math.pow(1 + quarterlyRate, totalQuarters) - 1) / quarterlyRate;
+            } else {
+                // 每年追加，使用年利率
+                const yearlyRate = annualRate / 100;
+                futureAdditional = additional * (Math.pow(1 + yearlyRate, years) - 1) / yearlyRate;
+            }
+            
+            const finalValue = futureInitial + futureAdditional;
+            const totalAdditional = additional * periodsPerYear * years;
+            const totalInvestment = initial + totalAdditional;
+            const compoundInterest = finalValue - totalInvestment;
+            
+            // 计算年化收益率
+            const annualizedReturn = (Math.pow(finalValue / totalInvestment, 1 / years) - 1) * 100;
+            
+            // 显示结果
+            document.getElementById('regularInitialResult').textContent = initial.toFixed(2) + ' 元';
+            document.getElementById('totalAdditional').textContent = totalAdditional.toFixed(2) + ' 元';
+            document.getElementById('totalRegularInvestment').textContent = totalInvestment.toFixed(2) + ' 元';
+            document.getElementById('regularCompoundInterest').textContent = compoundInterest.toFixed(2) + ' 元';
+            document.getElementById('regularFinalValue').textContent = finalValue.toFixed(2) + ' 元';
+            document.getElementById('regularAnnualizedReturn').textContent = annualizedReturn.toFixed(2) + '%';
+            document.getElementById('additionalTimes').textContent = (periodsPerYear * years) + ' 次';
+            document.getElementById('additionalFrequencyDisplay').textContent = frequencyText;
+            document.getElementById('additionalPerPeriod').textContent = additional.toFixed(2) + ' 元';
+            
+            // 显示定期投资结果区域
+            document.getElementById('basicResult').style.display = 'none';
+            document.getElementById('regularResult').style.display = 'block';
+            document.getElementById('goalResult').style.display = 'none';
+            
+            // 绘制定期投资图表
+            drawRegularChart(initial, additional, frequency, years, annualRate);
+        }
+        
+        // 计算目标金额
+        function calculateGoalCompound() {
+            // 获取输入值
+            const goal = parseFloat(document.getElementById('goalAmount').value) || 0;
+            const initial = parseFloat(document.getElementById('goalInitial').value) || 0;
+            const annualRate = parseFloat(document.getElementById('goalRate').value) || 0;
+            const frequency = document.getElementById('goalFrequency').value;
+            const hasAdditional = document.getElementById('goalAdditionalToggle').checked;
+            
+            // 确定复利频率
+            let n = 1;
+            switch(frequency) {
+                case 'yearly': n = 1; break;
+                case 'semi-annually': n = 2; break;
+                case 'quarterly': n = 4; break;
+                case 'monthly': n = 12; break;
+            }
+            
+            const ratePerPeriod = annualRate / 100 / n;
+            
+            let requiredYears = 0;
+            let compoundInterest = 0;
+            
+            if (!hasAdditional) {
+                // 没有定期追加，使用对数计算所需年限
+                // 公式: t = log(FV/PV) / (n * log(1 + r/n))
+                requiredYears = Math.log(goal / initial) / (n * Math.log(1 + ratePerPeriod));
+                
+                if (requiredYears < 0 || !isFinite(requiredYears)) {
+                    requiredYears = 0;
+                }
+                
+                compoundInterest = goal - initial;
+            } else {
+                // 有定期追加，需要迭代计算
+                const additionalAmount = parseFloat(document.getElementById('goalAdditionalAmount').value) || 0;
+                const additionalFrequency = document.getElementById('goalAdditionalFrequency').value;
+                
+                // 简化计算：假设年复利，每月/每年追加
+                const yearlyRate = annualRate / 100;
+                let currentValue = initial;
+                requiredYears = 0;
+                
+                while (currentValue < goal && requiredYears < 100) {
+                    // 计算一年的收益
+                    currentValue *= (1 + yearlyRate);
+                    
+                    // 添加定期追加
+                    if (additionalFrequency === 'monthly') {
+                        currentValue += additionalAmount * 12;
+                    } else {
+                        currentValue += additionalAmount;
+                    }
+                    
+                    requiredYears++;
+                }
+                
+                // 计算总投资和利息
+                let totalAdditional = 0;
+                if (additionalFrequency === 'monthly') {
+                    totalAdditional = additionalAmount * 12 * requiredYears;
+                } else {
+                    totalAdditional = additionalAmount * requiredYears;
+                }
+                
+                const totalInvestment = initial + totalAdditional;
+                compoundInterest = goal - totalInvestment;
+                
+                // 显示定期追加结果
+                document.getElementById('goalAdditionalResult').style.display = 'block';
+                document.getElementById('goalAdditionalPerPeriod').textContent = additionalAmount.toFixed(2) + ' 元';
+                document.getElementById('goalAdditionalTimes').textContent = Math.round(requiredYears * (additionalFrequency === 'monthly' ? 12 : 1)) + ' 次';
+                document.getElementById('goalTotalAdditional').textContent = totalAdditional.toFixed(2) + ' 元';
+            }
+            
+            // 显示结果
+            document.getElementById('goalTarget').textContent = goal.toFixed(2) + ' 元';
+            document.getElementById('requiredTime').textContent = requiredYears.toFixed(1) + ' 年';
+            document.getElementById('goalInitialResult').textContent = initial.toFixed(2) + ' 元';
+            document.getElementById('goalCompoundInterest').textContent = compoundInterest.toFixed(2) + ' 元';
+            
+            // 如果没有定期追加，隐藏相关结果
+            if (!hasAdditional) {
+                document.getElementById('goalAdditionalResult').style.display = 'none';
+            }
+            
+            // 显示目标金额结果区域
+            document.getElementById('basicResult').style.display = 'none';
+            document.getElementById('regularResult').style.display = 'none';
+            document.getElementById('goalResult').style.display = 'block';
+            
+            // 更新时间线
+            updateGoalTimeline(initial, annualRate, requiredYears, hasAdditional);
+            
+            // 绘制目标达成图表
+            drawGoalChart(initial, goal, annualRate, requiredYears, hasAdditional);
+        }
+        
+        // 更新复利威力示例
+        function updateCompoundExamples() {
+            // 72法则示例
+            const basicRate = parseFloat(document.getElementById('basicRate').value) || 5;
+            const doubleYears = 72 / basicRate;
+            document.getElementById('rule72').textContent = `年利率${basicRate}%，约${doubleYears.toFixed(1)}年翻倍`;
+            
+            // 时间力量示例
+            const monthly = 1000;
+            const rate = 8;
+            const years = 30;
+            const monthlyRate = rate / 100 / 12;
+            const months = years * 12;
+            const futureValue = monthly * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+            document.getElementById('timePower').textContent = `约${(futureValue/10000).toFixed(0)}万元`;
+        }
+        
+        // 更新目标达成时间线
+        function updateGoalTimeline(initial, rate, years, hasAdditional) {
+            const goal = parseFloat(document.getElementById('goalAmount').value) || 0;
+            
+            // 计算第5年、第10年和最终的价值
+            const rateDecimal = rate / 100;
+            
+            // 第5年价值
+            const year5Value = initial * Math.pow(1 + rateDecimal, 5);
+            
+            // 第10年价值
+            const year10Value = initial * Math.pow(1 + rateDecimal, 10);
+            
+            // 最终价值
+            const finalValue = goal;
+            
+            // 更新时间线显示
+            document.getElementById('timelineInitial').textContent = initial.toFixed(0) + '元';
+            document.getElementById('timelineYear5').textContent = year5Value.toFixed(0) + '元';
+            document.getElementById('timelineYear10').textContent = year10Value.toFixed(0) + '元';
+            document.getElementById('timelineFinal').textContent = finalValue.toFixed(0) + '元';
+        }
+        
+        // 绘制复利增长图表
+        function drawCompoundChart(principal, rate, years, frequency, title) {
+            const ctx = document.getElementById('compoundChart').getContext('2d');
+            
+            // 确定复利频率
+            let n = 1;
+            switch(frequency) {
+                case 'yearly': n = 1; break;
+                case 'semi-annually': n = 2; break;
+                case 'quarterly': n = 4; break;
+                case 'monthly': n = 12; break;
+                case 'daily': n = 365; break;
+            }
+            
+            const ratePerPeriod = rate / 100 / n;
+            
+            // 生成数据
+            const labels = [];
+            const data = [];
+            
+            for (let i = 0; i <= years; i++) {
+                labels.push(`第${i}年`);
+                const periods = i * n;
+                const value = principal * Math.pow(1 + ratePerPeriod, periods);
+                data.push(value);
+            }
+            
+            // 如果已有图表实例，销毁它
+            if (window.compoundChartInstance) {
+                window.compoundChartInstance.destroy();
+            }
+            
+            // 创建新图表
+            window.compoundChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        borderColor: '#4361ee',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `投资价值: ${context.raw.toFixed(2)}元`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 10000) {
+                                        return (value/10000).toFixed(1) + '万元';
+                                    }
+                                    return value.toLocaleString() + '元';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 绘制定期投资图表
+        function drawRegularChart(initial, additional, frequency, years, rate) {
+            const ctx = document.getElementById('regularChart').getContext('2d');
+            
+            // 生成数据
+            const labels = [];
+            const data = [];
+            
+            const monthlyRate = rate / 100 / 12;
+            
+            // 确定追加频率对应的每月追加金额
+            let monthlyAddition = 0;
+            switch(frequency) {
+                case 'monthly': monthlyAddition = additional; break;
+                case 'quarterly': monthlyAddition = additional / 3; break; // 近似
+                case 'yearly': monthlyAddition = additional / 12; break; // 近似
+            }
+            
+            let currentValue = initial;
+            
+            for (let i = 0; i <= years; i++) {
+                labels.push(`第${i}年`);
+                
+                if (i === 0) {
+                    data.push(currentValue);
+                } else {
+                    // 计算一年的增长（简化计算）
+                    for (let m = 0; m < 12; m++) {
+                        currentValue *= (1 + monthlyRate);
+                        currentValue += monthlyAddition;
+                    }
+                    data.push(currentValue);
+                }
+            }
+            
+            // 如果已有图表实例，销毁它
+            if (window.regularChartInstance) {
+                window.regularChartInstance.destroy();
+            }
+            
+            // 创建新图表
+            window.regularChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '定期投资增长',
+                        data: data,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `投资价值: ${context.raw.toFixed(2)}元`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 10000) {
+                                        return (value/10000).toFixed(1) + '万元';
+                                    }
+                                    return value.toLocaleString() + '元';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 绘制目标达成图表
+        function drawGoalChart(initial, goal, rate, years, hasAdditional) {
+            const ctx = document.getElementById('goalChart').getContext('2d');
+            
+            // 生成数据
+            const labels = [];
+            const data = [];
+            const goalLine = [];
+            
+            const yearlyRate = rate / 100;
+            
+            let currentValue = initial;
+            
+            for (let i = 0; i <= years; i++) {
+                labels.push(`第${i}年`);
+                
+                if (i === 0) {
+                    data.push(currentValue);
+                } else {
+                    // 计算一年的增长
+                    currentValue *= (1 + yearlyRate);
+                    
+                    // 如果有定期追加
+                    if (hasAdditional && i <= years) {
+                        const additionalAmount = parseFloat(document.getElementById('goalAdditionalAmount').value) || 0;
+                        const additionalFrequency = document.getElementById('goalAdditionalFrequency').value;
+                        
+                        if (additionalFrequency === 'monthly') {
+                            currentValue += additionalAmount * 12;
+                        } else {
+                            currentValue += additionalAmount;
+                        }
+                    }
+                    
+                    data.push(currentValue);
+                }
+                
+                goalLine.push(goal);
+            }
+            
+            // 如果已有图表实例，销毁它
+            if (window.goalChartInstance) {
+                window.goalChartInstance.destroy();
+            }
+            
+            // 创建新图表
+            window.goalChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '投资增长',
+                            data: data,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '目标金额',
+                            data: goalLine,
+                            borderColor: '#ef4444',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toFixed(2)}元`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 10000) {
+                                        return (value/10000).toFixed(1) + '万元';
+                                    }
+                                    return value.toLocaleString() + '元';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            document.getElementById('calculateBtn').click();
+        });
+    </script>
+    
+    <style>
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .toggle-switch input[type="checkbox"] {
+            display: none;
+        }
+        
+        .toggle-slider {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+            background-color: var(--gray-300);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: background-color var(--transition);
+        }
+        
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            left: 0.125rem;
+            top: 0.125rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform var(--transition);
+        }
+        
+        .toggle-switch input[type="checkbox"]:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        .toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
+            transform: translateX(1.5rem);
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin-top: 0.5rem;
+        }
+        
+        .compound-power {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .power-examples {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .power-examples {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .power-example {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .power-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .power-content {
+            flex: 1;
+        }
+        
+        .power-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .power-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .power-result {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.25rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+        
+        .timeline-year {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .timeline-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 640px) {
+            .tabs {
+                font-size: 0.875rem;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .chart-container {
+                height: 150px;
+            }
+            
+            .power-examples {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
