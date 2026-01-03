@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>储蓄计划计算 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/finance.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">储蓄计划计算</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/finance.html" class="nav-link active">理财金融</a>
+                        <a href="../../pages/shopping.html" class="nav-link">消费购物</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/finance.html" class="breadcrumb-link">理财金融</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">储蓄计划计算</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">储蓄计划计算器</h1>
+                            <p class="calculator-description">
+                                规划您的储蓄目标，计算达成目标所需的储蓄金额和时间
+                            </p>
+                        </div>
+                        
+                        <!-- 储蓄类型选择 -->
+                        <div class="tabs" id="savingsTabs">
+                            <button class="tab active" data-type="target">目标储蓄</button>
+                            <button class="tab" data-type="regular">定期储蓄</button>
+                            <button class="tab" data-type="increase">递增储蓄</button>
+                        </div>
+                        
+                        <!-- 目标储蓄计算 -->
+                        <div id="targetSection">
+                            <div class="input-group">
+                                <label class="input-label">储蓄目标金额 (元)</label>
+                                <input type="number" id="targetAmount" class="input-field" placeholder="例如：1000000" value="1000000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">已有储蓄金额 (元)</label>
+                                <input type="number" id="existingAmount" class="input-field" placeholder="例如：50000" value="50000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年投资回报率 (%)</label>
+                                <input type="number" id="targetReturnRate" class="input-field" placeholder="例如：5.0" value="5.0" step="0.1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">储蓄期限 (年)</label>
+                                <input type="number" id="targetYears" class="input-field" placeholder="例如：10" value="10">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">储蓄频率</label>
+                                <select id="targetFrequency" class="input-field">
+                                    <option value="monthly">每月储蓄</option>
+                                    <option value="quarterly">每季度储蓄</option>
+                                    <option value="yearly">每年储蓄</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 定期储蓄计算 -->
+                        <div id="regularSection" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">每期储蓄金额 (元)</label>
+                                <input type="number" id="regularAmount" class="input-field" placeholder="例如：5000" value="5000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">储蓄频率</label>
+                                <select id="regularFrequency" class="input-field">
+                                    <option value="monthly">每月储蓄</option>
+                                    <option value="quarterly">每季度储蓄</option>
+                                    <option value="yearly">每年储蓄</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">储蓄期限 (年)</label>
+                                <input type="number" id="regularYears" class="input-field" placeholder="例如：20" value="20">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年投资回报率 (%)</label>
+                                <input type="number" id="regularReturnRate" class="input-field" placeholder="例如：6.0" value="6.0" step="0.1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">初始储蓄金额 (元)</label>
+                                <input type="number" id="regularInitial" class="input-field" placeholder="例如：0" value="0">
+                            </div>
+                        </div>
+                        
+                        <!-- 递增储蓄计算 -->
+                        <div id="increaseSection" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">初始储蓄金额 (元)</label>
+                                <input type="number" id="increaseInitial" class="input-field" placeholder="例如：1000" value="1000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年增加金额 (元)</label>
+                                <input type="number" id="annualIncrease" class="input-field" placeholder="例如：500" value="500">
+                                <small class="input-hint">每年储蓄金额增加量</small>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">储蓄期限 (年)</label>
+                                <input type="number" id="increaseYears" class="input-field" placeholder="例如：10" value="10">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">年投资回报率 (%)</label>
+                                <input type="number" id="increaseReturnRate" class="input-field" placeholder="例如：5.5" value="5.5" step="0.1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">储蓄频率</label>
+                                <select id="increaseFrequency" class="input-field">
+                                    <option value="yearly">每年储蓄</option>
+                                    <option value="monthly">每月储蓄</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算储蓄计划
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 计算结果</h3>
+                            
+                            <!-- 目标储蓄结果 -->
+                            <div id="targetResult" style="display: block;">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">储蓄目标</span>
+                                        <span class="result-value" id="goalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">已有储蓄未来值</span>
+                                        <span class="result-value" id="existingFuture">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">还需储蓄金额</span>
+                                        <span class="result-value" id="needToSave">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">每期储蓄额</span>
+                                        <span class="result-value" id="perPeriodSave">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">年储蓄总额</span>
+                                        <span class="result-value" id="annualSaveTotal">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">储蓄总次数</span>
+                                        <span class="result-value" id="totalPeriods">0 次</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 储蓄进度表 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">储蓄进度表</h4>
+                                    <div style="overflow-x: auto;">
+                                        <table class="savings-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>年份</th>
+                                                    <th>累计储蓄</th>
+                                                    <th>投资收益</th>
+                                                    <th>总金额</th>
+                                                    <th>进度</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="targetSchedule">
+                                                <!-- 储蓄计划将通过JS动态生成 -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 定期储蓄结果 -->
+                            <div id="regularResult" style="display: none;">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">每期储蓄额</span>
+                                        <span class="result-value" id="regularPerPeriod">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">储蓄总期数</span>
+                                        <span class="result-value" id="regularTotalPeriods">0 次</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">储蓄总额</span>
+                                        <span class="result-value" id="regularTotalSavings">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">投资收益</span>
+                                        <span class="result-value" id="regularInvestmentReturn">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">最终金额</span>
+                                        <span class="result-value" id="regularFinalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">年化收益率</span>
+                                        <span class="result-value" id="regularEffectiveReturn">0.00%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 定期储蓄增长图表 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">储蓄增长趋势</h4>
+                                    <div class="chart-container">
+                                        <canvas id="regularChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 递增储蓄结果 -->
+                            <div id="increaseResult" style="display: none;">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">储蓄总期数</span>
+                                        <span class="result-value" id="increaseTotalPeriods">0 次</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">储蓄总额</span>
+                                        <span class="result-value" id="increaseTotalSavings">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">平均年储蓄</span>
+                                        <span class="result-value" id="increaseAvgAnnual">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">投资收益</span>
+                                        <span class="result-value" id="increaseInvestmentReturn">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">最终金额</span>
+                                        <span class="result-value" id="increaseFinalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">最后一年储蓄</span>
+                                        <span class="result-value" id="increaseLastYear">0.00 元</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 递增储蓄明细 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">逐年储蓄明细</h4>
+                                    <div style="overflow-x: auto;">
+                                        <table class="increase-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>年份</th>
+                                                    <th>年储蓄额</th>
+                                                    <th>累计储蓄</th>
+                                                    <th>投资收益</th>
+                                                    <th>总金额</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="increaseSchedule">
+                                                <!-- 递增储蓄计划将通过JS动态生成 -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 储蓄策略建议 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>储蓄策略建议：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>自动储蓄</strong>：设置自动转账，强制储蓄更有效</li>
+                                    <li><strong>先储蓄后消费</strong>：收到收入后先储蓄，再安排消费</li>
+                                    <li><strong>递增储蓄</strong>：随着收入增长，同步增加储蓄金额</li>
+                                    <li><strong>分散储蓄</strong>：将资金分散到不同账户或产品中</li>
+                                    <li><strong>定期检视</strong>：每季度检查储蓄进度，调整计划</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">理财工具</h4>
+                    <a href="savings-plan.html" class="footer-link">储蓄计划</a>
+                    <a href="pension.html" class="footer-link">养老金计算</a>
+                    <a href="inflation.html" class="footer-link">通货膨胀计算</a>
+                    <a href="roi.html" class="footer-link">投资回报率</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/finance.html" class="footer-link">返回理财金融</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../shopping/discount.html" class="footer-link">折扣计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/tax.html" class="footer-link">个税计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 储蓄计划计算</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item active">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 标签页切换
+        document.querySelectorAll('#savingsTabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('#savingsTabs .tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                // 显示对应的内容区域
+                document.querySelectorAll('[id$="Section"]').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                document.getElementById(type + 'Section').style.display = 'block';
+                
+                // 显示对应的结果区域
+                document.querySelectorAll('[id$="Result"]').forEach(result => {
+                    result.style.display = 'none';
+                });
+                
+                // 显示结果区域
+                document.getElementById('resultSection').style.display = 'block';
+                
+                // 重新计算
+                setTimeout(() => {
+                    document.getElementById('calculateBtn').click();
+                }, 100);
+            });
+        });
+        
+        // 计算储蓄计划
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const activeTab = document.querySelector('#savingsTabs .tab.active').dataset.type;
+            
+            if (activeTab === 'target') {
+                calculateTargetSavings();
+            } else if (activeTab === 'regular') {
+                calculateRegularSavings();
+            } else if (activeTab === 'increase') {
+                calculateIncreaseSavings();
+            }
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        });
+        
+        // 计算目标储蓄
+        function calculateTargetSavings() {
+            // 获取输入值
+            const targetAmount = parseFloat(document.getElementById('targetAmount').value) || 0;
+            const existingAmount = parseFloat(document.getElementById('existingAmount').value) || 0;
+            const returnRate = parseFloat(document.getElementById('targetReturnRate').value) || 0;
+            const years = parseFloat(document.getElementById('targetYears').value) || 0;
+            const frequency = document.getElementById('targetFrequency').value;
+            
+            // 确定储蓄频率
+            let periodsPerYear = 12;
+            let periodText = '月';
+            
+            switch(frequency) {
+                case 'monthly': periodsPerYear = 12; periodText = '月'; break;
+                case 'quarterly': periodsPerYear = 4; periodText = '季度'; break;
+                case 'yearly': periodsPerYear = 1; periodText = '年'; break;
+            }
+            
+            const totalPeriods = years * periodsPerYear;
+            const periodRate = returnRate / 100 / periodsPerYear;
+            
+            // 已有储蓄的未来值
+            const existingFuture = existingAmount * Math.pow(1 + periodRate, totalPeriods);
+            
+            // 需要储蓄的金额
+            const needToSave = targetAmount - existingFuture;
+            
+            // 计算每期储蓄额
+            let perPeriodSave = 0;
+            if (periodRate > 0) {
+                perPeriodSave = needToSave * periodRate / (Math.pow(1 + periodRate, totalPeriods) - 1);
+            } else {
+                perPeriodSave = needToSave / totalPeriods;
+            }
+            
+            // 年储蓄总额
+            const annualSaveTotal = perPeriodSave * periodsPerYear;
+            
+            // 显示结果
+            document.getElementById('goalAmount').textContent = 
+                targetAmount.toFixed(2) + ' 元';
+            document.getElementById('existingFuture').textContent = 
+                existingFuture.toFixed(2) + ' 元';
+            document.getElementById('needToSave').textContent = 
+                needToSave.toFixed(2) + ' 元';
+            document.getElementById('perPeriodSave').textContent = 
+                perPeriodSave.toFixed(2) + ' 元/' + periodText;
+            document.getElementById('annualSaveTotal').textContent = 
+                annualSaveTotal.toFixed(2) + ' 元';
+            document.getElementById('totalPeriods').textContent = 
+                totalPeriods + ' 次';
+            
+            // 生成储蓄进度表
+            generateTargetSchedule(existingAmount, perPeriodSave, periodRate, totalPeriods, periodsPerYear, targetAmount);
+            
+            // 显示目标储蓄结果区域
+            document.getElementById('targetResult').style.display = 'block';
+            document.getElementById('regularResult').style.display = 'none';
+            document.getElementById('increaseResult').style.display = 'none';
+        }
+        
+        // 生成储蓄进度表
+        function generateTargetSchedule(initial, perPeriod, periodRate, totalPeriods, periodsPerYear, target) {
+            const scheduleBody = document.getElementById('targetSchedule');
+            scheduleBody.innerHTML = '';
+            
+            let totalSavings = initial;
+            let totalInvestment = 0;
+            
+            // 每年显示一次
+            for (let year = 1; year <= totalPeriods / periodsPerYear; year++) {
+                const periodsInYear = Math.min(periodsPerYear, totalPeriods - (year-1)*periodsPerYear);
+                
+                for (let period = 1; period <= periodsInYear; period++) {
+                    // 计算本期投资收益
+                    const periodReturn = totalSavings * periodRate;
+                    totalInvestment += periodReturn;
+                    totalSavings += periodReturn;
+                    
+                    // 添加本期储蓄
+                    totalSavings += perPeriod;
+                }
+                
+                // 计算进度百分比
+                const progress = Math.min(100, (totalSavings / target * 100));
+                
+                // 显示每年结果
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>第 ${year} 年</td>
+                    <td>${(perPeriod * periodsPerYear * year).toFixed(2)}</td>
+                    <td>${totalInvestment.toFixed(2)}</td>
+                    <td>${totalSavings.toFixed(2)}</td>
+                    <td>${progress.toFixed(1)}%</td>
+                `;
+                scheduleBody.appendChild(row);
+            }
+        }
+        
+        // 计算定期储蓄
+        function calculateRegularSavings() {
+            // 获取输入值
+            const perPeriod = parseFloat(document.getElementById('regularAmount').value) || 0;
+            const frequency = document.getElementById('regularFrequency').value;
+            const years = parseFloat(document.getElementById('regularYears').value) || 0;
+            const returnRate = parseFloat(document.getElementById('regularReturnRate').value) || 0;
+            const initial = parseFloat(document.getElementById('regularInitial').value) || 0;
+            
+            // 确定储蓄频率
+            let periodsPerYear = 12;
+            let periodText = '月';
+            
+            switch(frequency) {
+                case 'monthly': periodsPerYear = 12; periodText = '月'; break;
+                case 'quarterly': periodsPerYear = 4; periodText = '季度'; break;
+                case 'yearly': periodsPerYear = 1; periodText = '年'; break;
+            }
+            
+            const totalPeriods = years * periodsPerYear;
+            const periodRate = returnRate / 100 / periodsPerYear;
+            
+            // 计算初始投资的未来值
+            let finalAmount = initial * Math.pow(1 + periodRate, totalPeriods);
+            
+            // 计算定期储蓄的未来值
+            if (periodRate > 0) {
+                finalAmount += perPeriod * (Math.pow(1 + periodRate, totalPeriods) - 1) / periodRate;
+            } else {
+                finalAmount += perPeriod * totalPeriods;
+            }
+            
+            // 计算储蓄总额
+            const totalSavings = initial + perPeriod * totalPeriods;
+            
+            // 投资收益
+            const investmentReturn = finalAmount - totalSavings;
+            
+            // 计算实际年化收益率
+            let effectiveReturn = 0;
+            if (years > 0) {
+                effectiveReturn = (Math.pow(finalAmount / totalSavings, 1 / years) - 1) * 100;
+            }
+            
+            // 显示结果
+            document.getElementById('regularPerPeriod').textContent = 
+                perPeriod.toFixed(2) + ' 元/' + periodText;
+            document.getElementById('regularTotalPeriods').textContent = 
+                totalPeriods + ' 次';
+            document.getElementById('regularTotalSavings').textContent = 
+                totalSavings.toFixed(2) + ' 元';
+            document.getElementById('regularInvestmentReturn').textContent = 
+                investmentReturn.toFixed(2) + ' 元';
+            document.getElementById('regularFinalAmount').textContent = 
+                finalAmount.toFixed(2) + ' 元';
+            document.getElementById('regularEffectiveReturn').textContent = 
+                effectiveReturn.toFixed(2) + '%';
+            
+            // 绘制储蓄增长图表
+            drawRegularChart(initial, perPeriod, frequency, years, returnRate);
+            
+            // 显示定期储蓄结果区域
+            document.getElementById('targetResult').style.display = 'none';
+            document.getElementById('regularResult').style.display = 'block';
+            document.getElementById('increaseResult').style.display = 'none';
+        }
+        
+        // 绘制储蓄增长图表
+        function drawRegularChart(initial, perPeriod, frequency, years, returnRate) {
+            const ctx = document.getElementById('regularChart').getContext('2d');
+            
+            // 确定储蓄频率
+            let periodsPerYear = 12;
+            switch(frequency) {
+                case 'monthly': periodsPerYear = 12; break;
+                case 'quarterly': periodsPerYear = 4; break;
+                case 'yearly': periodsPerYear = 1; break;
+            }
+            
+            const periodRate = returnRate / 100 / periodsPerYear;
+            const totalPeriods = years * periodsPerYear;
+            
+            // 生成数据
+            const labels = [];
+            const savingsData = [];
+            const investmentData = [];
+            const totalData = [];
+            
+            let totalSavings = initial;
+            let totalInvestment = 0;
+            let currentSavings = initial;
+            
+            for (let year = 0; year <= years; year++) {
+                labels.push(`第${year}年`);
+                
+                if (year === 0) {
+                    savingsData.push(currentSavings);
+                    investmentData.push(0);
+                    totalData.push(currentSavings);
+                } else {
+                    // 计算一年的储蓄和投资
+                    for (let period = 0; period < periodsPerYear; period++) {
+                        // 计算投资收益
+                        const periodReturn = currentSavings * periodRate;
+                        totalInvestment += periodReturn;
+                        currentSavings += periodReturn;
+                        
+                        // 添加储蓄
+                        currentSavings += perPeriod;
+                        totalSavings += perPeriod;
+                    }
+                    
+                    savingsData.push(totalSavings);
+                    investmentData.push(totalInvestment);
+                    totalData.push(currentSavings);
+                }
+            }
+            
+            // 如果已有图表实例，销毁它
+            if (window.regularChartInstance) {
+                window.regularChartInstance.destroy();
+            }
+            
+            // 创建新图表
+            window.regularChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '储蓄总额',
+                            data: savingsData,
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '投资收益',
+                            data: investmentData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '总金额',
+                            data: totalData,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toFixed(2)}元`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 10000) {
+                                        return (value/10000).toFixed(1) + '万元';
+                                    }
+                                    return value.toLocaleString() + '元';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 计算递增储蓄
+        function calculateIncreaseSavings() {
+            // 获取输入值
+            const initial = parseFloat(document.getElementById('increaseInitial').value) || 0;
+            const annualIncrease = parseFloat(document.getElementById('annualIncrease').value) || 0;
+            const years = parseFloat(document.getElementById('increaseYears').value) || 0;
+            const returnRate = parseFloat(document.getElementById('increaseReturnRate').value) || 0;
+            const frequency = document.getElementById('increaseFrequency').value;
+            
+            // 确定储蓄频率
+            let periodsPerYear = 1;
+            let periodText = '年';
+            
+            if (frequency === 'monthly') {
+                periodsPerYear = 12;
+                periodText = '月';
+            }
+            
+            const totalPeriods = years * periodsPerYear;
+            const periodRate = returnRate / 100 / periodsPerYear;
+            
+            let totalSavings = 0;
+            let totalInvestment = 0;
+            let currentAmount = 0;
+            
+            const scheduleBody = document.getElementById('increaseSchedule');
+            scheduleBody.innerHTML = '';
+            
+            // 逐年计算
+            for (let year = 1; year <= years; year++) {
+                // 本年储蓄金额
+                const yearSave = initial + (year - 1) * annualIncrease;
+                const yearSaveTotal = frequency === 'monthly' ? yearSave / 12 : yearSave;
+                
+                // 计算本年储蓄的未来值
+                let yearFuture = 0;
+                
+                if (frequency === 'monthly') {
+                    // 每月储蓄
+                    for (let month = 1; month <= 12; month++) {
+                        const monthsRemaining = (years - year + 1) * 12 - (month - 1);
+                        yearFuture += yearSaveTotal * Math.pow(1 + periodRate, monthsRemaining);
+                    }
+                } else {
+                    // 每年储蓄
+                    const yearsRemaining = years - year + 1;
+                    yearFuture = yearSave * Math.pow(1 + returnRate/100, yearsRemaining);
+                }
+                
+                // 更新总额
+                totalSavings += yearSave;
+                currentAmount += yearFuture;
+                
+                // 投资收益
+                const yearInvestment = yearFuture - yearSave;
+                totalInvestment += yearInvestment;
+                
+                // 添加到表格
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>第 ${year} 年</td>
+                    <td>${yearSave.toFixed(2)}</td>
+                    <td>${totalSavings.toFixed(2)}</td>
+                    <td>${totalInvestment.toFixed(2)}</td>
+                    <td>${currentAmount.toFixed(2)}</td>
+                `;
+                scheduleBody.appendChild(row);
+            }
+            
+            // 最后一年储蓄额
+            const lastYearSave = initial + (years - 1) * annualIncrease;
+            
+            // 平均年储蓄
+            const avgAnnualSave = totalSavings / years;
+            
+            // 显示结果
+            document.getElementById('increaseTotalPeriods').textContent = 
+                totalPeriods + ' 次';
+            document.getElementById('increaseTotalSavings').textContent = 
+                totalSavings.toFixed(2) + ' 元';
+            document.getElementById('increaseAvgAnnual').textContent = 
+                avgAnnualSave.toFixed(2) + ' 元';
+            document.getElementById('increaseInvestmentReturn').textContent = 
+                totalInvestment.toFixed(2) + ' 元';
+            document.getElementById('increaseFinalAmount').textContent = 
+                currentAmount.toFixed(2) + ' 元';
+            document.getElementById('increaseLastYear').textContent = 
+                lastYearSave.toFixed(2) + ' 元';
+            
+            // 显示递增储蓄结果区域
+            document.getElementById('targetResult').style.display = 'none';
+            document.getElementById('regularResult').style.display = 'none';
+            document.getElementById('increaseResult').style.display = 'block';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            document.getElementById('calculateBtn').click();
+        });
+    </script>
+    
+    <style>
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .input-hint {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+        }
+        
+        .savings-table,
+        .increase-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        .savings-table th,
+        .savings-table td,
+        .increase-table th,
+        .increase-table td {
+            padding: 0.5rem;
+            text-align: right;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .savings-table th,
+        .increase-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background-color: var(--gray-50);
+        }
+        
+        .savings-table th:first-child,
+        .savings-table td:first-child,
+        .increase-table th:first-child,
+        .increase-table td:first-child {
+            text-align: left;
+        }
+        
+        .savings-table tr:hover,
+        .increase-table tr:hover {
+            background-color: var(--gray-50);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin-top: 0.5rem;
+        }
+        
+        @media (max-width: 640px) {
+            .tabs {
+                font-size: 0.875rem;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .savings-table,
+            .increase-table {
+                font-size: 0.75rem;
+            }
+            
+            .savings-table th,
+            .savings-table td,
+            .increase-table th,
+            .increase-table td {
+                padding: 0.25rem;
+            }
+            
+            .chart-container {
+                height: 150px;
+            }
+        }
+    </style>
+</body>
+</html>
