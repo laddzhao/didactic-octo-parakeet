@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>能耗计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/home.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">能耗计算器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/home.html" class="nav-link">居家生活</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/home.html" class="breadcrumb-link">居家生活</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">能耗计算器</span>
+                </nav>
+                
+                <h1 class="calculator-title">家用电器能耗计算器</h1>
+                <p class="calculator-description">计算家用电器能耗，估算电费成本，发现节能潜力。</p>
+                
+                <div class="energy-layout">
+                    <!-- 左侧：电器库和电价设置 -->
+                    <div class="energy-sidebar">
+                        <!-- 电价设置 -->
+                        <div class="calculator-card">
+                            <h3><i class="fas fa-bolt"></i> 电价设置</h3>
+                            
+                            <div class="input-group">
+                                <label class="input-label">计价方式</label>
+                                <select id="electricityPlan" class="input-field">
+                                    <option value="fixed">固定单价</option>
+                                    <option value="tiered">阶梯电价</option>
+                                    <option value="time">峰谷分时</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 固定单价 -->
+                            <div id="fixedRateSection">
+                                <div class="input-group">
+                                    <label class="input-label">电费单价 (元/kWh)</label>
+                                    <input type="number" id="electricityRate" class="input-field" placeholder="例如：0.5" step="0.01" value="0.6" min="0">
+                                </div>
+                            </div>
+                            
+                            <!-- 阶梯电价 -->
+                            <div id="tieredRateSection" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">第一阶梯 (0-240kWh)</label>
+                                    <input type="number" id="tier1Rate" class="input-field" placeholder="单价" step="0.01" value="0.4883" min="0">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">第二阶梯 (241-400kWh)</label>
+                                    <input type="number" id="tier2Rate" class="input-field" placeholder="单价" step="0.01" value="0.5383" min="0">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">第三阶梯 (400+kWh)</label>
+                                    <input type="number" id="tier3Rate" class="input-field" placeholder="单价" step="0.01" value="0.7883" min="0">
+                                </div>
+                            </div>
+                            
+                            <!-- 峰谷分时 -->
+                            <div id="timeRateSection" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">峰时单价 (8:00-22:00)</label>
+                                    <input type="number" id="peakRate" class="input-field" placeholder="单价" step="0.01" value="0.568" min="0">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">谷时单价 (22:00-8:00)</label>
+                                    <input type="number" id="valleyRate" class="input-field" placeholder="单价" step="0.01" value="0.288" min="0">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">峰时用电比例 (%)</label>
+                                    <input type="number" id="peakRatio" class="input-field" placeholder="例如：70" value="70" min="0" max="100">
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">计算周期</label>
+                                <select id="calculationPeriod" class="input-field">
+                                    <option value="day">每日</option>
+                                    <option value="month" selected>每月 (30天)</option>
+                                    <option value="year">每年 (365天)</option>
+                                    <option value="custom">自定义</option>
+                                </select>
+                            </div>
+                            
+                            <div id="customPeriodSection" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">自定义天数</label>
+                                    <input type="number" id="customDays" class="input-field" placeholder="天数" value="30" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 电器库 -->
+                        <div class="calculator-card mt-4">
+                            <h3><i class="fas fa-plug"></i> 常用电器库</h3>
+                            <p>点击添加电器到计算列表</p>
+                            
+                            <div class="appliance-categories">
+                                <div class="tabs">
+                                    <button class="tab active" data-category="kitchen">厨房</button>
+                                    <button class="tab" data-category="living">客厅</button>
+                                    <button class="tab" data-category="bedroom">卧室</button>
+                                    <button class="tab" data-category="bathroom">卫浴</button>
+                                    <button class="tab" data-category="office">办公</button>
+                                </div>
+                            </div>
+                            
+                            <div class="appliance-list" id="applianceList">
+                                <!-- 电器列表动态生成 -->
+                            </div>
+                            
+                            <!-- 自定义电器 -->
+                            <div class="input-group mt-4">
+                                <label class="input-label">自定义电器</label>
+                                <div class="input-row">
+                                    <input type="text" id="customApplianceName" class="input-field" placeholder="电器名称">
+                                    <button class="btn btn-sm btn-outline" id="addCustomAppliance"><i class="fas fa-plus"></i> 添加</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 节能建议 -->
+                        <div class="calculator-card mt-4">
+                            <h3><i class="fas fa-leaf"></i> 快速节能建议</h3>
+                            <div class="energy-tips">
+                                <div class="energy-tip">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>使用LED灯可节省80%照明电费</span>
+                                </div>
+                                <div class="energy-tip">
+                                    <i class="fas fa-thermometer-half"></i>
+                                    <span>空调温度每调高1°C，可省电6-8%</span>
+                                </div>
+                                <div class="energy-tip">
+                                    <i class="fas fa-power-off"></i>
+                                    <span>待机电器每月耗电约3-10度</span>
+                                </div>
+                                <div class="energy-tip">
+                                    <i class="fas fa-sun"></i>
+                                    <span>使用峰谷电价，谷时用电更省钱</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：主计算区 -->
+                    <div class="energy-main">
+                        <!-- 电器计算器 -->
+                        <div class="calculator-card">
+                            <h3><i class="fas fa-calculator"></i> 电器能耗计算</h3>
+                            <p>添加电器，设置使用习惯，计算能耗和电费</p>
+                            
+                            <div class="appliance-calculator">
+                                <!-- 当前电器列表 -->
+                                <div class="current-appliances" id="currentAppliances">
+                                    <div class="appliance-header">
+                                        <div style="flex: 2;">电器名称</div>
+                                        <div>功率 (W)</div>
+                                        <div>使用时间</div>
+                                        <div>每日能耗</div>
+                                        <div>操作</div>
+                                    </div>
+                                    <div class="appliance-items" id="applianceItems">
+                                        <!-- 电器项将通过JS动态添加 -->
+                                    </div>
+                                    
+                                    <div class="no-appliances" id="noAppliances">
+                                        <i class="fas fa-plug"></i>
+                                        <p>还没有添加电器，请从左侧电器库中选择或自定义添加</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- 添加新电器表单 -->
+                                <div class="add-appliance-form" id="addApplianceForm" style="display: none;">
+                                    <h4><i class="fas fa-plus-circle"></i> 添加/编辑电器</h4>
+                                    
+                                    <div class="input-row">
+                                        <div class="input-group">
+                                            <label class="input-label">电器名称</label>
+                                            <input type="text" id="applianceName" class="input-field" placeholder="例如：空调">
+                                        </div>
+                                        <div class="input-group">
+                                            <label class="input-label">电器类型</label>
+                                            <select id="applianceType" class="input-field">
+                                                <option value="heating_cooling">制冷/制热</option>
+                                                <option value="lighting">照明</option>
+                                                <option value="entertainment">娱乐</option>
+                                                <option value="kitchen">厨房电器</option>
+                                                <option value="cleaning">清洁电器</option>
+                                                <option value="office">办公电器</option>
+                                                <option value="other">其他</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="input-row">
+                                        <div class="input-group">
+                                            <label class="input-label">额定功率 (W)</label>
+                                            <input type="number" id="appliancePower" class="input-field" placeholder="例如：1500" min="1" step="1">
+                                        </div>
+                                        <div class="input-group">
+                                            <label class="input-label">能效等级</label>
+                                            <select id="energyEfficiency" class="input-field">
+                                                <option value="1">1级 (最节能)</option>
+                                                <option value="2">2级</option>
+                                                <option value="3" selected>3级</option>
+                                                <option value="4">4级</option>
+                                                <option value="5">5级 (最耗能)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 使用时间设置 -->
+                                    <div class="usage-pattern">
+                                        <h5>使用习惯设置</h5>
+                                        
+                                        <div class="input-row">
+                                            <div class="input-group">
+                                                <label class="input-label">每日使用次数</label>
+                                                <input type="number" id="dailyUses" class="input-field" placeholder="例如：2" value="1" min="1" step="1">
+                                            </div>
+                                            <div class="input-group">
+                                                <label class="input-label">每次使用时长 (分钟)</label>
+                                                <input type="number" id="useDuration" class="input-field" placeholder="例如：60" value="60" min="1" step="1">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="input-group">
+                                            <label class="input-label">使用时段</label>
+                                            <div class="time-slots">
+                                                <div class="time-slot-option" data-time="peak">
+                                                    <i class="fas fa-sun"></i>
+                                                    <span>峰时 (8:00-22:00)</span>
+                                                </div>
+                                                <div class="time-slot-option" data-time="valley">
+                                                    <i class="fas fa-moon"></i>
+                                                    <span>谷时 (22:00-8:00)</span>
+                                                </div>
+                                                <div class="time-slot-option" data-time="both">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>峰谷都有</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="input-group">
+                                            <label class="input-label">使用频率</label>
+                                            <select id="usageFrequency" class="input-field">
+                                                <option value="daily">每天使用</option>
+                                                <option value="weekdays">仅工作日</option>
+                                                <option value="weekends">仅周末</option>
+                                                <option value="custom">自定义</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div id="customFrequencySection" style="display: none;">
+                                            <div class="input-group">
+                                                <label class="input-label">每周使用天数</label>
+                                                <input type="number" id="weeklyDays" class="input-field" placeholder="1-7" value="7" min="1" max="7">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button class="btn btn-outline" id="cancelAppliance">取消</button>
+                                        <button class="btn btn-primary" id="saveAppliance">保存电器</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 操作按钮 -->
+                                <div class="appliance-actions">
+                                    <button class="btn btn-primary" id="addNewAppliance">
+                                        <i class="fas fa-plus"></i> 添加新电器
+                                    </button>
+                                    <button class="btn btn-secondary" id="calculateAll">
+                                        <i class="fas fa-calculator"></i> 计算全部
+                                    </button>
+                                    <button class="btn btn-outline" id="clearAllAppliances">
+                                        <i class="fas fa-trash"></i> 清空列表
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 能耗分析结果 -->
+                        <div class="calculator-card mt-4" id="resultsSection" style="display: none;">
+                            <h3><i class="fas fa-chart-bar"></i> 能耗分析结果</h3>
+                            
+                            <!-- 总览 -->
+                            <div class="energy-overview">
+                                <div class="overview-grid">
+                                    <div class="overview-item">
+                                        <div class="overview-label">总电器数</div>
+                                        <div class="overview-value" id="totalAppliances">0</div>
+                                    </div>
+                                    <div class="overview-item">
+                                        <div class="overview-label">总功率</div>
+                                        <div class="overview-value" id="totalPower">0 W</div>
+                                    </div>
+                                    <div class="overview-item">
+                                        <div class="overview-label">总能耗</div>
+                                        <div class="overview-value" id="totalEnergy">0 kWh</div>
+                                    </div>
+                                    <div class="overview-item">
+                                        <div class="overview-label">总电费</div>
+                                        <div class="overview-value" id="totalCost">0 元</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 详细结果 -->
+                            <div class="detailed-results">
+                                <div class="result-tabs">
+                                    <button class="result-tab active" data-tab="summary">能耗汇总</button>
+                                    <button class="result-tab" data-tab="breakdown">电器明细</button>
+                                    <button class="result-tab" data-tab="comparison">节能对比</button>
+                                    <button class="result-tab" data-tab="savings">节省建议</button>
+                                </div>
+                                
+                                <!-- 汇总标签页 -->
+                                <div class="result-tab-content active" id="summaryTab">
+                                    <div class="result-chart">
+                                        <canvas id="energyChart" width="400" height="200"></canvas>
+                                    </div>
+                                    
+                                    <div class="summary-grid">
+                                        <div class="summary-item">
+                                            <div class="summary-label">日均能耗</div>
+                                            <div class="summary-value" id="dailyEnergy">0 kWh</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">月均能耗</div>
+                                            <div class="summary-value" id="monthlyEnergy">0 kWh</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">年均能耗</div>
+                                            <div class="summary-value" id="yearlyEnergy">0 kWh</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">碳足迹</div>
+                                            <div class="summary-value" id="carbonFootprint">0 kg</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="cost-breakdown">
+                                        <h5>电费构成</h5>
+                                        <div class="breakdown-grid">
+                                            <div class="breakdown-item">
+                                                <div class="breakdown-label">峰时电费</div>
+                                                <div class="breakdown-value" id="peakCost">0 元</div>
+                                            </div>
+                                            <div class="breakdown-item">
+                                                <div class="breakdown-label">谷时电费</div>
+                                                <div class="breakdown-value" id="valleyCost">0 元</div>
+                                            </div>
+                                            <div class="breakdown-item">
+                                                <div class="breakdown-label">阶梯加价</div>
+                                                <div class="breakdown-value" id="tierSurcharge">0 元</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 明细标签页 -->
+                                <div class="result-tab-content" id="breakdownTab">
+                                    <div class="breakdown-table">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>电器名称</th>
+                                                    <th>功率 (W)</th>
+                                                    <th>使用时间</th>
+                                                    <th>能耗</th>
+                                                    <th>电费</th>
+                                                    <th>占比</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="breakdownTableBody">
+                                                <!-- 表格数据将通过JS动态生成 -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <!-- 节能对比标签页 -->
+                                <div class="result-tab-content" id="comparisonTab">
+                                    <div class="comparison-content">
+                                        <h5>节能措施效果对比</h5>
+                                        <div class="comparison-grid" id="comparisonGrid">
+                                            <!-- 对比数据将通过JS动态生成 -->
+                                        </div>
+                                        
+                                        <div class="comparison-chart">
+                                            <canvas id="savingsChart" width="400" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 节省建议标签页 -->
+                                <div class="result-tab-content" id="savingsTab">
+                                    <div class="savings-suggestions" id="savingsSuggestions">
+                                        <!-- 建议将通过JS动态生成 -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 导出结果 -->
+                            <div class="export-actions mt-4">
+                                <button class="btn btn-outline" id="exportResults">
+                                    <i class="fas fa-download"></i> 导出计算结果
+                                </button>
+                                <button class="btn btn-outline" id="shareResults">
+                                    <i class="fas fa-share-alt"></i> 分享结果
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 常见电器参考 -->
+                        <div class="calculator-card mt-4">
+                            <h3><i class="fas fa-list"></i> 常见电器能耗参考</h3>
+                            <p>以下为常见电器的典型功率和月均能耗参考值</p>
+                            
+                            <div class="reference-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>电器类别</th>
+                                            <th>典型电器</th>
+                                            <th>功率范围 (W)</th>
+                                            <th>月均能耗 (kWh)</th>
+                                            <th>月均电费 (元)</th>
+                                            <th>节能潜力</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>制冷/制热</td>
+                                            <td>空调 (1.5匹)</td>
+                                            <td>1000-1500</td>
+                                            <td>150-300</td>
+                                            <td>90-180</td>
+                                            <td>高</td>
+                                        </tr>
+                                        <tr>
+                                            <td>制冷/制热</td>
+                                            <td>电暖器</td>
+                                            <td>800-2000</td>
+                                            <td>120-240</td>
+                                            <td>72-144</td>
+                                            <td>高</td>
+                                        </tr>
+                                        <tr>
+                                            <td>厨房电器</td>
+                                            <td>电冰箱 (200L)</td>
+                                            <td>100-200</td>
+                                            <td>30-50</td>
+                                            <td>18-30</td>
+                                            <td>中</td>
+                                        </tr>
+                                        <tr>
+                                            <td>厨房电器</td>
+                                            <td>电饭煲</td>
+                                            <td>500-1000</td>
+                                            <td>15-30</td>
+                                            <td>9-18</td>
+                                            <td>低</td>
+                                        </tr>
+                                        <tr>
+                                            <td>清洁电器</td>
+                                            <td>洗衣机</td>
+                                            <td>300-500</td>
+                                            <td>15-25</td>
+                                            <td>9-15</td>
+                                            <td>中</td>
+                                        </tr>
+                                        <tr>
+                                            <td>清洁电器</td>
+                                            <td>热水器</td>
+                                            <td>1500-3000</td>
+                                            <td>60-120</td>
+                                            <td>36-72</td>
+                                            <td>高</td>
+                                        </tr>
+                                        <tr>
+                                            <td>娱乐电器</td>
+                                            <td>电视机 (55寸)</td>
+                                            <td>100-200</td>
+                                            <td>20-40</td>
+                                            <td>12-24</td>
+                                            <td>中</td>
+                                        </tr>
+                                        <tr>
+                                            <td>照明</td>
+                                            <td>LED灯 (10个)</td>
+                                            <td>50-100</td>
+                                            <td>15-30</td>
+                                            <td>9-18</td>
+                                            <td>中</td>
+                                        </tr>
+                                        <tr>
+                                            <td>办公电器</td>
+                                            <td>台式电脑</td>
+                                            <td>200-400</td>
+                                            <td>30-60</td>
+                                            <td>18-36</td>
+                                            <td>中</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="alert alert-info mt-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-info-circle mr-3"></i>
+                                    <div>
+                                        <strong>参考说明：</strong> 以上数据为典型值，实际能耗受使用习惯、电器型号、能效等级等因素影响。新能效标准1级比3级可节能20-40%。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 使用说明 -->
+                <div class="alert alert-info mt-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-lightbulb mr-3"></i>
+                        <div>
+                            <strong>使用说明</strong>
+                            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                <li><strong>设置电价</strong>: 根据当地电价政策选择合适的计价方式</li>
+                                <li><strong>添加电器</strong>: 从电器库中选择常用电器或自定义添加</li>
+                                <li><strong>设置使用习惯</strong>: 设置电器的功率、使用时间、频率等参数</li>
+                                <li><strong>计算分析</strong>: 系统自动计算能耗、电费，并提供节能建议</li>
+                                <li><strong>优化调整</strong>: 根据建议调整使用习惯，查看节能效果</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">居家工具</h4>
+                    <a href="utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="area-volume.html" class="footer-link">面积体积计算</a>
+                    <a href="paint-calc.html" class="footer-link">涂料用量计算</a>
+                    <a href="cooking-convert.html" class="footer-link">食材换算</a>
+                    <a href="cooking-time.html" class="footer-link">烹饪时间计算</a>
+                    <a href="furniture-arrangement.html" class="footer-link">家具摆放计算</a>
+                    <a href="energy-calculator.html" class="footer-link active">能耗计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/home.html" class="footer-link">返回居家生活</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../shopping/discount.html" class="footer-link">折扣计算器</a>
+                    <a href="../finance/interest.html" class="footer-link">利息计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 能耗计算器</p>
+                <p class="footer-note">
+                    本工具基于典型电器数据计算，实际能耗可能因使用习惯、设备型号等因素有所差异。
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/home.html" class="nav-item active">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">居家</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <!-- 引入Chart.js用于图表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // 电器数据库
+        const applianceDB = {
+            kitchen: [
+                {id: 'refrigerator', name: '电冰箱', power: 150, efficiency: 3, type: 'kitchen'},
+                {id: 'rice_cooker', name: '电饭煲', power: 800, efficiency: 3, type: 'kitchen'},
+                {id: 'microwave', name: '微波炉', power: 1000, efficiency: 3, type: 'kitchen'},
+                {id: 'oven', name: '电烤箱', power: 1500, efficiency: 4, type: 'kitchen'},
+                {id: 'dishwasher', name: '洗碗机', power: 1200, efficiency: 2, type: 'kitchen'},
+                {id: 'range_hood', name: '抽油烟机', power: 200, efficiency: 3, type: 'kitchen'},
+                {id: 'electric_kettle', name: '电热水壶', power: 1500, efficiency: 3, type: 'kitchen'}
+            ],
+            living: [
+                {id: 'tv', name: '电视机', power: 150, efficiency: 3, type: 'entertainment'},
+                {id: 'sound_system', name: '音响系统', power: 100, efficiency: 3, type: 'entertainment'},
+                {id: 'game_console', name: '游戏机', power: 200, efficiency: 4, type: 'entertainment'},
+                {id: 'air_purifier', name: '空气净化器', power: 50, efficiency: 2, type: 'heating_cooling'},
+                {id: 'floor_lamp', name: '落地灯', power: 60, efficiency: 4, type: 'lighting'}
+            ],
+            bedroom: [
+                {id: 'air_conditioner', name: '空调', power: 1200, efficiency: 3, type: 'heating_cooling'},
+                {id: 'electric_blanket', name: '电热毯', power: 80, efficiency: 4, type: 'heating_cooling'},
+                {id: 'ceiling_fan', name: '吊扇', power: 75, efficiency: 2, type: 'heating_cooling'},
+                {id: 'bedside_lamp', name: '床头灯', power: 40, efficiency: 4, type: 'lighting'},
+                {id: 'alarm_clock', name: '电子闹钟', power: 5, efficiency: 2, type: 'other'}
+            ],
+            bathroom: [
+                {id: 'water_heater', name: '电热水器', power: 2000, efficiency: 3, type: 'heating_cooling'},
+                {id: 'hair_dryer', name: '吹风机', power: 1600, efficiency: 3, type: 'other'},
+                {id: 'electric_toothbrush', name: '电动牙刷', power: 5, efficiency: 2, type: 'other'},
+                {id: 'shaver', name: '电动剃须刀', power: 10, efficiency: 2, type: 'other'}
+            ],
+            office: [
+                {id: 'desktop_pc', name: '台式电脑', power: 300, efficiency: 3, type: 'office'},
+                {id: 'laptop', name: '笔记本电脑', power: 80, efficiency: 2, type: 'office'},
+                {id: 'monitor', name: '显示器', power: 40, efficiency: 3, type: 'office'},
+                {id: 'printer', name: '打印机', power: 50, efficiency: 3, type: 'office'},
+                {id: 'router', name: '路由器', power: 15, efficiency: 2, type: 'office'},
+                {id: 'desk_lamp', name: '台灯', power: 30, efficiency: 4, type: 'lighting'}
+            ]
+        };
+
+        // 能效等级系数 (1级最节能，5级最耗能)
+        const efficiencyFactors = {
+            1: 0.8,  // 1级能效：能耗为基准的80%
+            2: 0.9,  // 2级能效：能耗为基准的90%
+            3: 1.0,  // 3级能效：基准能耗
+            4: 1.1,  // 4级能效：能耗为基准的110%
+            5: 1.2   // 5级能效：能耗为基准的120%
+        };
+
+        // 电器类型默认使用习惯
+        const applianceTypeDefaults = {
+            heating_cooling: {dailyUses: 1, useDuration: 480, timeSlot: 'both', frequency: 'daily'},
+            lighting: {dailyUses: 1, useDuration: 240, timeSlot: 'peak', frequency: 'daily'},
+            entertainment: {dailyUses: 1, useDuration: 180, timeSlot: 'peak', frequency: 'daily'},
+            kitchen: {dailyUses: 2, useDuration: 30, timeSlot: 'peak', frequency: 'daily'},
+            cleaning: {dailyUses: 1, useDuration: 60, timeSlot: 'peak', frequency: 'weekdays'},
+            office: {dailyUses: 1, useDuration: 480, timeSlot: 'peak', frequency: 'weekdays'},
+            other: {dailyUses: 1, useDuration: 30, timeSlot: 'both', frequency: 'daily'}
+        };
+
+        // 全局变量
+        let appliances = []; // 当前添加的电器列表
+        let editingIndex = -1; // 当前编辑的电器索引
+        let energyChart = null; // 能耗图表实例
+        let savingsChart = null; // 节能对比图表实例
+        
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initEventListeners();
+            loadApplianceList();
+            initTheme();
+            
+            // 默认添加一个示例电器
+            addExampleAppliance();
+        });
+        
+        // 初始化事件监听器
+        function initEventListeners() {
+            // 电价计划切换
+            document.getElementById('electricityPlan').addEventListener('change', function() {
+                const plan = this.value;
+                document.getElementById('fixedRateSection').style.display = 'none';
+                document.getElementById('tieredRateSection').style.display = 'none';
+                document.getElementById('timeRateSection').style.display = 'none';
+                
+                document.getElementById(plan + 'RateSection').style.display = 'block';
+            });
+            
+            // 计算周期切换
+            document.getElementById('calculationPeriod').addEventListener('change', function() {
+                const period = this.value;
+                document.getElementById('customPeriodSection').style.display = 
+                    period === 'custom' ? 'block' : 'none';
+            });
+            
+            // 电器分类切换
+            document.querySelectorAll('.appliance-categories .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // 更新标签状态
+                    document.querySelectorAll('.appliance-categories .tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 加载对应分类的电器
+                    loadApplianceList(category);
+                });
+            });
+            
+            // 使用频率切换
+            document.getElementById('usageFrequency').addEventListener('change', function() {
+                const frequency = this.value;
+                document.getElementById('customFrequencySection').style.display = 
+                    frequency === 'custom' ? 'block' : 'none';
+            });
+            
+            // 时间槽选择
+            document.querySelectorAll('.time-slot-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 添加自定义电器
+            document.getElementById('addCustomAppliance').addEventListener('click', function() {
+                const name = document.getElementById('customApplianceName').value.trim();
+                if(name) {
+                    addCustomAppliance(name);
+                    document.getElementById('customApplianceName').value = '';
+                }
+            });
+            
+            // 添加新电器按钮
+            document.getElementById('addNewAppliance').addEventListener('click', function() {
+                showApplianceForm();
+            });
+            
+            // 保存电器
+            document.getElementById('saveAppliance').addEventListener('click', saveAppliance);
+            
+            // 取消添加/编辑
+            document.getElementById('cancelAppliance').addEventListener('click', function() {
+                hideApplianceForm();
+                resetApplianceForm();
+            });
+            
+            // 计算全部
+            document.getElementById('calculateAll').addEventListener('click', calculateAll);
+            
+            // 清空列表
+            document.getElementById('clearAllAppliances').addEventListener('click', function() {
+                if(appliances.length > 0 && confirm('确定要清空所有电器吗？')) {
+                    appliances = [];
+                    updateApplianceList();
+                    hideResults();
+                }
+            });
+            
+            // 结果标签页切换
+            document.querySelectorAll('.result-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 更新标签状态
+                    document.querySelectorAll('.result-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 更新内容显示
+                    document.querySelectorAll('.result-tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId + 'Tab').classList.add('active');
+                });
+            });
+            
+            // 导出结果
+            document.getElementById('exportResults').addEventListener('click', exportResults);
+            
+            // 分享结果
+            document.getElementById('shareResults').addEventListener('click', shareResults);
+            
+            // 输入变化时实时计算
+            document.querySelectorAll('#addApplianceForm input, #addApplianceForm select').forEach(element => {
+                element.addEventListener('input', function() {
+                    if(editingIndex >= 0) {
+                        // 如果是编辑模式，实时更新预览
+                        updateAppliancePreview();
+                    }
+                });
+            });
+        }
+        
+        // 加载电器列表
+        function loadApplianceList(category = 'kitchen') {
+            const applianceList = document.getElementById('applianceList');
+            applianceList.innerHTML = '';
+            
+            const items = applianceDB[category] || [];
+            
+            items.forEach(item => {
+                const applianceItem = document.createElement('div');
+                applianceItem.className = 'appliance-library-item';
+                applianceItem.setAttribute('data-id', item.id);
+                applianceItem.innerHTML = `
+                    <div class="appliance-library-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <div class="appliance-library-info">
+                        <strong>${item.name}</strong>
+                        <small>${item.power}W | ${getEfficiencyLabel(item.efficiency)}</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline add-from-library" data-id="${item.id}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                `;
+                
+                // 添加事件
+                applianceItem.querySelector('.add-from-library').addEventListener('click', function() {
+                    addApplianceFromLibrary(item.id, category);
+                });
+                
+                applianceList.appendChild(applianceItem);
+            });
+        }
+        
+        // 从电器库添加电器
+        function addApplianceFromLibrary(applianceId, category) {
+            const categoryItems = applianceDB[category];
+            const appliance = categoryItems.find(item => item.id === applianceId);
+            
+            if(appliance) {
+                // 使用该电器类型的默认设置
+                const defaults = applianceTypeDefaults[appliance.type] || applianceTypeDefaults.other;
+                
+                const newAppliance = {
+                    id: applianceId + '_' + Date.now(),
+                    name: appliance.name,
+                    power: appliance.power,
+                    efficiency: appliance.efficiency,
+                    type: appliance.type,
+                    dailyUses: defaults.dailyUses,
+                    useDuration: defaults.useDuration,
+                    timeSlot: defaults.timeSlot,
+                    frequency: defaults.frequency,
+                    weeklyDays: 7
+                };
+                
+                appliances.push(newAppliance);
+                updateApplianceList();
+            }
+        }
+        
+        // 添加自定义电器
+        function addCustomAppliance(name) {
+            const newAppliance = {
+                id: 'custom_' + Date.now(),
+                name: name,
+                power: 100,
+                efficiency: 3,
+                type: 'other',
+                dailyUses: 1,
+                useDuration: 60,
+                timeSlot: 'both',
+                frequency: 'daily',
+                weeklyDays: 7
+            };
+            
+            appliances.push(newAppliance);
+            updateApplianceList();
+            
+            // 切换到编辑模式
+            editingIndex = appliances.length - 1;
+            showApplianceForm();
+            populateApplianceForm(newAppliance);
+        }
+        
+        // 添加示例电器
+        function addExampleAppliance() {
+            const exampleAppliance = {
+                id: 'example_' + Date.now(),
+                name: '空调 (示例)',
+                power: 1200,
+                efficiency: 3,
+                type: 'heating_cooling',
+                dailyUses: 1,
+                useDuration: 480, // 8小时
+                timeSlot: 'both',
+                frequency: 'daily',
+                weeklyDays: 7
+            };
+            
+            appliances.push(exampleAppliance);
+            updateApplianceList();
+        }
+        
+        // 更新电器列表显示
+        function updateApplianceList() {
+            const applianceItems = document.getElementById('applianceItems');
+            const noAppliances = document.getElementById('noAppliances');
+            
+            applianceItems.innerHTML = '';
+            
+            if(appliances.length === 0) {
+                noAppliances.style.display = 'block';
+                return;
+            }
+            
+            noAppliances.style.display = 'none';
+            
+            appliances.forEach((appliance, index) => {
+                // 计算每日能耗 (kWh)
+                const dailyEnergy = calculateDailyEnergy(appliance);
+                
+                const applianceItem = document.createElement('div');
+                applianceItem.className = 'appliance-item';
+                applianceItem.innerHTML = `
+                    <div class="appliance-name" style="flex: 2;">
+                        <strong>${appliance.name}</strong>
+                        <small>${getEfficiencyLabel(appliance.efficiency)}</small>
+                    </div>
+                    <div class="appliance-power">${appliance.power} W</div>
+                    <div class="appliance-usage">${appliance.dailyUses}次 × ${appliance.useDuration}分钟</div>
+                    <div class="appliance-energy">${dailyEnergy.toFixed(2)} kWh</div>
+                    <div class="appliance-actions">
+                        <button class="btn btn-sm btn-outline edit-appliance" data-index="${index}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline remove-appliance" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                applianceItems.appendChild(applianceItem);
+            });
+            
+            // 绑定编辑和删除事件
+            document.querySelectorAll('.edit-appliance').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    editAppliance(index);
+                });
+            });
+            
+            document.querySelectorAll('.remove-appliance').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeAppliance(index);
+                });
+            });
+        }
+        
+        // 显示电器表单
+        function showApplianceForm() {
+            document.getElementById('addApplianceForm').style.display = 'block';
+            document.getElementById('addNewAppliance').style.display = 'none';
+        }
+        
+        // 隐藏电器表单
+        function hideApplianceForm() {
+            document.getElementById('addApplianceForm').style.display = 'none';
+            document.getElementById('addNewAppliance').style.display = 'block';
+        }
+        
+        // 填充电器表单
+        function populateApplianceForm(appliance) {
+            document.getElementById('applianceName').value = appliance.name;
+            document.getElementById('applianceType').value = appliance.type;
+            document.getElementById('appliancePower').value = appliance.power;
+            document.getElementById('energyEfficiency').value = appliance.efficiency;
+            document.getElementById('dailyUses').value = appliance.dailyUses;
+            document.getElementById('useDuration').value = appliance.useDuration;
+            document.getElementById('usageFrequency').value = appliance.frequency;
+            
+            // 设置时间槽选择
+            document.querySelectorAll('.time-slot-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if(opt.getAttribute('data-time') === appliance.timeSlot) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            // 如果是自定义频率，显示自定义天数
+            if(appliance.frequency === 'custom') {
+                document.getElementById('customFrequencySection').style.display = 'block';
+                document.getElementById('weeklyDays').value = appliance.weeklyDays || 7;
+            } else {
+                document.getElementById('customFrequencySection').style.display = 'none';
+            }
+        }
+        
+        // 重置电器表单
+        function resetApplianceForm() {
+            editingIndex = -1;
+            document.getElementById('applianceName').value = '';
+            document.getElementById('applianceType').value = 'other';
+            document.getElementById('appliancePower').value = '';
+            document.getElementById('energyEfficiency').value = 3;
+            document.getElementById('dailyUses').value = 1;
+            document.getElementById('useDuration').value = 60;
+            document.getElementById('usageFrequency').value = 'daily';
+            
+            // 重置时间槽选择
+            document.querySelectorAll('.time-slot-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector('.time-slot-option[data-time="both"]').classList.add('selected');
+            
+            document.getElementById('customFrequencySection').style.display = 'none';
+        }
+        
+        // 编辑电器
+        function editAppliance(index) {
+            editingIndex = index;
+            const appliance = appliances[index];
+            
+            showApplianceForm();
+            populateApplianceForm(appliance);
+        }
+        
+        // 删除电器
+        function removeAppliance(index) {
+            appliances.splice(index, 1);
+            updateApplianceList();
+            
+            // 如果删除了正在编辑的电器
+            if(editingIndex === index) {
+                editingIndex = -1;
+                hideApplianceForm();
+                resetApplianceForm();
+            }
+            
+            // 如果没有电器了，隐藏结果
+            if(appliances.length === 0) {
+                hideResults();
+            }
+        }
+        
+        // 保存电器
+        function saveAppliance() {
+            // 获取表单数据
+            const name = document.getElementById('applianceName').value.trim();
+            const power = parseFloat(document.getElementById('appliancePower').value) || 0;
+            const efficiency = parseInt(document.getElementById('energyEfficiency').value) || 3;
+            const type = document.getElementById('applianceType').value;
+            const dailyUses = parseInt(document.getElementById('dailyUses').value) || 1;
+            const useDuration = parseInt(document.getElementById('useDuration').value) || 60;
+            const frequency = document.getElementById('usageFrequency').value;
+            
+            // 获取选中的时间槽
+            const selectedTimeSlot = document.querySelector('.time-slot-option.selected');
+            const timeSlot = selectedTimeSlot ? selectedTimeSlot.getAttribute('data-time') : 'both';
+            
+            // 获取每周使用天数（如果是自定义频率）
+            let weeklyDays = 7;
+            if(frequency === 'custom') {
+                weeklyDays = parseInt(document.getElementById('weeklyDays').value) || 7;
+                weeklyDays = Math.min(Math.max(weeklyDays, 1), 7);
+            }
+            
+            // 验证数据
+            if(!name) {
+                alert('请输入电器名称');
+                return;
+            }
+            
+            if(power <= 0) {
+                alert('请输入有效的功率值');
+                return;
+            }
+            
+            // 创建或更新电器对象
+            const applianceData = {
+                id: editingIndex >= 0 ? appliances[editingIndex].id : 'appliance_' + Date.now(),
+                name: name,
+                power: power,
+                efficiency: efficiency,
+                type: type,
+                dailyUses: dailyUses,
+                useDuration: useDuration,
+                timeSlot: timeSlot,
+                frequency: frequency,
+                weeklyDays: weeklyDays
+            };
+            
+            if(editingIndex >= 0) {
+                // 更新现有电器
+                appliances[editingIndex] = applianceData;
+            } else {
+                // 添加新电器
+                appliances.push(applianceData);
+            }
+            
+            // 更新界面
+            updateApplianceList();
+            hideApplianceForm();
+            resetApplianceForm();
+        }
+        
+        // 更新电器预览（实时计算）
+        function updateAppliancePreview() {
+            // 这个函数可以在用户编辑时实时显示能耗预览
+            // 为简化，这里不实现实时预览
+        }
+        
+        // 计算单个电器每日能耗 (kWh)
+        function calculateDailyEnergy(appliance) {
+            // 计算实际功率（考虑能效等级）
+            const actualPower = appliance.power * efficiencyFactors[appliance.efficiency];
+            
+            // 计算每日总使用时间（小时）
+            const dailyHours = (appliance.dailyUses * appliance.useDuration) / 60;
+            
+            // 考虑使用频率
+            let frequencyFactor = 1;
+            switch(appliance.frequency) {
+                case 'weekdays':
+                    frequencyFactor = 5/7; // 每周5天
+                    break;
+                case 'weekends':
+                    frequencyFactor = 2/7; // 每周2天
+                    break;
+                case 'custom':
+                    frequencyFactor = (appliance.weeklyDays || 7) / 7;
+                    break;
+                default: // daily
+                    frequencyFactor = 1;
+            }
+            
+            // 计算每日能耗 (kWh) = 功率(kW) × 时间(小时) × 频率系数
+            return (actualPower / 1000) * dailyHours * frequencyFactor;
+        }
+        
+        // 计算全部
+        function calculateAll() {
+            if(appliances.length === 0) {
+                alert('请先添加至少一个电器');
+                return;
+            }
+            
+            // 获取电价设置
+            const electricityPlan = document.getElementById('electricityPlan').value;
+            let electricityRate = parseFloat(document.getElementById('electricityRate').value) || 0.6;
+            
+            // 获取计算周期
+            const period = document.getElementById('calculationPeriod').value;
+            let days = 30; // 默认月计算
+            
+            if(period === 'day') {
+                days = 1;
+            } else if(period === 'year') {
+                days = 365;
+            } else if(period === 'custom') {
+                days = parseFloat(document.getElementById('customDays').value) || 30;
+            }
+            
+            // 计算每个电器的能耗和电费
+            let totalPower = 0;
+            let totalEnergy = 0;
+            let totalCost = 0;
+            let peakEnergy = 0;
+            let valleyEnergy = 0;
+            
+            appliances.forEach(appliance => {
+                // 计算每日能耗
+                const dailyEnergy = calculateDailyEnergy(appliance);
+                
+                // 计算周期总能耗
+                const periodEnergy = dailyEnergy * days;
+                
+                // 累加总功率（按额定功率，不考虑能效）
+                totalPower += appliance.power;
+                
+                // 累加总能耗
+                totalEnergy += periodEnergy;
+                
+                // 根据时间槽分配峰谷能耗
+                let appliancePeakEnergy = 0;
+                let applianceValleyEnergy = 0;
+                
+                switch(appliance.timeSlot) {
+                    case 'peak':
+                        appliancePeakEnergy = periodEnergy;
+                        break;
+                    case 'valley':
+                        applianceValleyEnergy = periodEnergy;
+                        break;
+                    case 'both':
+                    default:
+                        // 默认按70%峰时，30%谷时
+                        appliancePeakEnergy = periodEnergy * 0.7;
+                        applianceValleyEnergy = periodEnergy * 0.3;
+                        break;
+                }
+                
+                peakEnergy += appliancePeakEnergy;
+                valleyEnergy += applianceValleyEnergy;
+                
+                // 计算电费（简化计算）
+                let applianceCost = 0;
+                
+                if(electricityPlan === 'fixed') {
+                    // 固定单价
+                    applianceCost = periodEnergy * electricityRate;
+                } else if(electricityPlan === 'tiered') {
+                    // 阶梯电价（简化：假设所有电器共享阶梯）
+                    // 这里只计算总电费，不在单个电器上计算
+                } else if(electricityPlan === 'time') {
+                    // 峰谷分时电价
+                    const peakRate = parseFloat(document.getElementById('peakRate').value) || 0.568;
+                    const valleyRate = parseFloat(document.getElementById('valleyRate').value) || 0.288;
+                    applianceCost = (appliancePeakEnergy * peakRate) + (applianceValleyEnergy * valleyRate);
+                }
+                
+                // 存储计算结果到电器对象
+                appliance.calculatedEnergy = periodEnergy;
+                appliance.calculatedCost = applianceCost;
+                appliance.peakEnergy = appliancePeakEnergy;
+                appliance.valleyEnergy = applianceValleyEnergy;
+                
+                totalCost += applianceCost;
+            });
+            
+            // 如果是阶梯电价，计算总电费
+            if(electricityPlan === 'tiered') {
+                const tier1Rate = parseFloat(document.getElementById('tier1Rate').value) || 0.4883;
+                const tier2Rate = parseFloat(document.getElementById('tier2Rate').value) || 0.5383;
+                const tier3Rate = parseFloat(document.getElementById('tier3Rate').value) || 0.7883;
+                
+                // 计算总用电量
+                const totalEnergy = peakEnergy + valleyEnergy;
+                
+                // 阶梯计算
+                let tierCost = 0;
+                if(totalEnergy <= 240) {
+                    tierCost = totalEnergy * tier1Rate;
+                } else if(totalEnergy <= 400) {
+                    tierCost = 240 * tier1Rate + (totalEnergy - 240) * tier2Rate;
+                } else {
+                    tierCost = 240 * tier1Rate + 160 * tier2Rate + (totalEnergy - 400) * tier3Rate;
+                }
+                
+                totalCost = tierCost;
+            }
+            
+            // 更新结果显示
+            updateResults(totalPower, totalEnergy, totalCost, peakEnergy, valleyEnergy, days);
+            
+            // 显示结果区域
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // 更新电器明细表
+            updateBreakdownTable();
+            
+            // 生成节能建议
+            generateSavingsSuggestions();
+            
+            // 创建图表
+            createEnergyChart();
+            createSavingsChart();
+            
+            // 滚动到结果区域
+            document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
+        }
+        
+        // 更新结果显示
+        function updateResults(totalPower, totalEnergy, totalCost, peakEnergy, valleyEnergy, days) {
+            // 更新总览
+            document.getElementById('totalAppliances').textContent = appliances.length;
+            document.getElementById('totalPower').textContent = Math.round(totalPower) + ' W';
+            document.getElementById('totalEnergy').textContent = totalEnergy.toFixed(2) + ' kWh';
+            document.getElementById('totalCost').textContent = totalCost.toFixed(2) + ' 元';
+            
+            // 计算不同周期的能耗
+            const dailyEnergy = totalEnergy / days;
+            const monthlyEnergy = dailyEnergy * 30;
+            const yearlyEnergy = dailyEnergy * 365;
+            
+            // 计算碳足迹 (1kWh ≈ 0.785kg CO2)
+            const carbonFootprint = totalEnergy * 0.785;
+            
+            // 更新汇总数据
+            document.getElementById('dailyEnergy').textContent = dailyEnergy.toFixed(2) + ' kWh';
+            document.getElementById('monthlyEnergy').textContent = monthlyEnergy.toFixed(2) + ' kWh';
+            document.getElementById('yearlyEnergy').textContent = yearlyEnergy.toFixed(2) + ' kWh';
+            document.getElementById('carbonFootprint').textContent = carbonFootprint.toFixed(2) + ' kg';
+            
+            // 更新电费构成
+            const electricityPlan = document.getElementById('electricityPlan').value;
+            
+            if(electricityPlan === 'time') {
+                const peakRate = parseFloat(document.getElementById('peakRate').value) || 0.568;
+                const valleyRate = parseFloat(document.getElementById('valleyRate').value) || 0.288;
+                
+                const peakCost = peakEnergy * peakRate;
+                const valleyCost = valleyEnergy * valleyRate;
+                
+                document.getElementById('peakCost').textContent = peakCost.toFixed(2) + ' 元';
+                document.getElementById('valleyCost').textContent = valleyCost.toFixed(2) + ' 元';
+                document.getElementById('tierSurcharge').textContent = '0 元';
+            } else if(electricityPlan === 'tiered') {
+                // 阶梯电价的加价部分
+                const baseCost = totalEnergy * 0.4883; // 按第一阶梯计算
+                const surcharge = totalCost - baseCost;
+                
+                document.getElementById('peakCost').textContent = '--';
+                document.getElementById('valleyCost').textContent = '--';
+                document.getElementById('tierSurcharge').textContent = surcharge > 0 ? surcharge.toFixed(2) + ' 元' : '0 元';
+            } else {
+                document.getElementById('peakCost').textContent = '--';
+                document.getElementById('valleyCost').textContent = '--';
+                document.getElementById('tierSurcharge').textContent = '0 元';
+            }
+        }
+        
+        // 更新电器明细表
+        function updateBreakdownTable() {
+            const tableBody = document.getElementById('breakdownTableBody');
+            tableBody.innerHTML = '';
+            
+            // 计算总能耗和总电费
+            let totalEnergy = 0;
+            let totalCost = 0;
+            
+            appliances.forEach(appliance => {
+                totalEnergy += appliance.calculatedEnergy || 0;
+                totalCost += appliance.calculatedCost || 0;
+            });
+            
+            // 添加每行数据
+            appliances.forEach(appliance => {
+                const energy = appliance.calculatedEnergy || 0;
+                const cost = appliance.calculatedCost || 0;
+                const percentage = totalEnergy > 0 ? (energy / totalEnergy * 100) : 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${appliance.name}</td>
+                    <td>${appliance.power} W</td>
+                    <td>${appliance.dailyUses}次 × ${appliance.useDuration}分钟</td>
+                    <td>${energy.toFixed(2)} kWh</td>
+                    <td>${cost.toFixed(2)} 元</td>
+                    <td>${percentage.toFixed(1)}%</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // 添加总计行
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td><strong>总计</strong></td>
+                <td>${appliances.reduce((sum, a) => sum + a.power, 0)} W</td>
+                <td>-</td>
+                <td><strong>${totalEnergy.toFixed(2)} kWh</strong></td>
+                <td><strong>${totalCost.toFixed(2)} 元</strong></td>
+                <td><strong>100%</strong></td>
+            `;
+            
+            tableBody.appendChild(totalRow);
+        }
+        
+        // 生成节能建议
+        function generateSavingsSuggestions() {
+            const suggestionsContainer = document.getElementById('savingsSuggestions');
+            suggestionsContainer.innerHTML = '';
+            
+            const suggestions = [];
+            
+            // 分析电器数据，生成针对性建议
+            appliances.forEach(appliance => {
+                // 高功率电器建议
+                if(appliance.power >= 1000) {
+                    suggestions.push({
+                        title: `减少${appliance.name}使用时间`,
+                        description: `${appliance.name}功率较高(${appliance.power}W)，减少使用时间可以显著降低能耗。`,
+                        savings: `预计可节省${(appliance.calculatedEnergy * 0.2).toFixed(1)}kWh`,
+                        priority: 'high'
+                    });
+                }
+                
+                // 低能效电器建议
+                if(appliance.efficiency >= 4) {
+                    suggestions.push({
+                        title: `考虑更换${appliance.name}`,
+                        description: `${appliance.name}能效等级较低(${getEfficiencyLabel(appliance.efficiency)})，更换为1级能效产品可节能20-40%。`,
+                        savings: `预计可节省${(appliance.calculatedEnergy * 0.3).toFixed(1)}kWh`,
+                        priority: 'medium'
+                    });
+                }
+                
+                // 长时间使用电器建议
+                if(appliance.useDuration >= 120 && appliance.dailyUses >= 2) {
+                    suggestions.push({
+                        title: `优化${appliance.name}使用习惯`,
+                        description: `${appliance.name}使用频繁，考虑合并使用或减少单次使用时间。`,
+                        savings: `预计可节省${(appliance.calculatedEnergy * 0.15).toFixed(1)}kWh`,
+                        priority: 'medium'
+                    });
+                }
+            });
+            
+            // 通用建议
+            suggestions.push({
+                title: '利用峰谷电价',
+                description: '将洗衣机、热水器等大功率电器安排在谷时(22:00-8:00)使用，可节省电费30-50%。',
+                savings: '预计可节省电费20-40%',
+                priority: 'high'
+            });
+            
+            suggestions.push({
+                title: '减少待机能耗',
+                description: '不使用时彻底关闭电器电源，待机电器每月耗电约3-10度。',
+                savings: '预计可节省3-10kWh/月',
+                priority: 'medium'
+            });
+            
+            suggestions.push({
+                title: '优化空调温度',
+                description: '夏季空调温度调高1°C，冬季调低1°C，可节省6-8%的能耗。',
+                savings: '预计可节省6-8%空调电费',
+                priority: 'medium'
+            });
+            
+            // 按优先级排序并显示
+            suggestions.sort((a, b) => {
+                const priorityOrder = {high: 0, medium: 1, low: 2};
+                return priorityOrder[a.priority] - priorityOrder[b.priority];
+            });
+            
+            // 显示建议
+            suggestions.forEach(suggestion => {
+                let priorityClass = '';
+                let priorityText = '';
+                
+                switch(suggestion.priority) {
+                    case 'high':
+                        priorityClass = 'suggestion-high';
+                        priorityText = '高优先级';
+                        break;
+                    case 'medium':
+                        priorityClass = 'suggestion-medium';
+                        priorityText = '中优先级';
+                        break;
+                    default:
+                        priorityClass = 'suggestion-low';
+                        priorityText = '低优先级';
+                }
+                
+                const suggestionElement = document.createElement('div');
+                suggestionElement.className = `suggestion-item ${priorityClass}`;
+                suggestionElement.innerHTML = `
+                    <div class="suggestion-header">
+                        <h5>${suggestion.title}</h5>
+                        <span class="suggestion-priority">${priorityText}</span>
+                    </div>
+                    <div class="suggestion-description">
+                        ${suggestion.description}
+                    </div>
+                    <div class="suggestion-savings">
+                        <i class="fas fa-coins"></i> 节省潜力: ${suggestion.savings}
+                    </div>
+                `;
+                
+                suggestionsContainer.appendChild(suggestionElement);
+            });
+        }
+        
+        // 创建能耗图表
+        function createEnergyChart() {
+            const ctx = document.getElementById('energyChart').getContext('2d');
+            
+            // 如果有现有图表，销毁它
+            if(energyChart) {
+                energyChart.destroy();
+            }
+            
+            // 按电器类型分组能耗
+            const energyByType = {};
+            appliances.forEach(appliance => {
+                const type = getApplianceTypeLabel(appliance.type);
+                const energy = appliance.calculatedEnergy || 0;
+                
+                if(!energyByType[type]) {
+                    energyByType[type] = 0;
+                }
+                energyByType[type] += energy;
+            });
+            
+            const labels = Object.keys(energyByType);
+            const data = Object.values(energyByType);
+            
+            // 生成颜色
+            const backgroundColors = [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)'
+            ];
+            
+            energyChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors.slice(0, labels.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: '能耗构成分析'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 创建节能对比图表
+        function createSavingsChart() {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+            
+            // 如果有现有图表，销毁它
+            if(savingsChart) {
+                savingsChart.destroy();
+            }
+            
+            // 计算当前总能耗和电费
+            let currentEnergy = 0;
+            let currentCost = 0;
+            
+            appliances.forEach(appliance => {
+                currentEnergy += appliance.calculatedEnergy || 0;
+                currentCost += appliance.calculatedCost || 0;
+            });
+            
+            // 计算节能措施后的能耗和电费（估算）
+            const measures = [
+                {name: '当前情况', energy: currentEnergy, cost: currentCost},
+                {name: '优化使用习惯', energy: currentEnergy * 0.85, cost: currentCost * 0.85},
+                {name: '使用1级能效电器', energy: currentEnergy * 0.75, cost: currentCost * 0.75},
+                {name: '综合节能措施', energy: currentEnergy * 0.65, cost: currentCost * 0.65}
+            ];
+            
+            const labels = measures.map(m => m.name);
+            const energyData = measures.map(m => m.energy);
+            const costData = measures.map(m => m.cost);
+            
+            savingsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '能耗 (kWh)',
+                            data: energyData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '电费 (元)',
+                            data: costData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '节能措施效果对比'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 隐藏结果区域
+        function hideResults() {
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+        
+        // 导出结果
+        function exportResults() {
+            // 创建导出数据
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                appliances: appliances,
+                settings: {
+                    electricityPlan: document.getElementById('electricityPlan').value,
+                    calculationPeriod: document.getElementById('calculationPeriod').value
+                },
+                results: {
+                    totalAppliances: appliances.length,
+                    totalPower: document.getElementById('totalPower').textContent,
+                    totalEnergy: document.getElementById('totalEnergy').textContent,
+                    totalCost: document.getElementById('totalCost').textContent
+                }
+            };
+            
+            // 创建下载链接
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `能耗计算结果_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            alert('计算结果已导出为JSON文件！');
+        }
+        
+        // 分享结果
+        function shareResults() {
+            const totalEnergy = document.getElementById('totalEnergy').textContent;
+            const totalCost = document.getElementById('totalCost').textContent;
+            
+            const shareText = `我的家用电器能耗计算结果：总能耗${totalEnergy}，总电费${totalCost}。使用"生活计算宝典"能耗计算器分析。`;
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert('结果已复制到剪贴板，可以粘贴分享！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制文本。\n\n' + shareText);
+            });
+        }
+        
+        // 辅助函数：获取能效等级标签
+        function getEfficiencyLabel(level) {
+            const labels = {
+                1: '1级 (最节能)',
+                2: '2级',
+                3: '3级',
+                4: '4级',
+                5: '5级 (最耗能)'
+            };
+            return labels[level] || '3级';
+        }
+        
+        // 辅助函数：获取电器类型标签
+        function getApplianceTypeLabel(type) {
+            const labels = {
+                'heating_cooling': '制冷/制热',
+                'lighting': '照明',
+                'entertainment': '娱乐',
+                'kitchen': '厨房电器',
+                'cleaning': '清洁电器',
+                'office': '办公电器',
+                'other': '其他电器'
+            };
+            return labels[type] || '其他电器';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if(savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                if(themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            if(themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+    </script>
+    
+    <style>
+        /* 能耗计算器专属样式 */
+        .energy-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 1024px) {
+            .energy-layout {
+                flex-direction: row;
+            }
+            
+            .energy-sidebar {
+                flex: 0 0 20rem;
+            }
+            
+            .energy-main {
+                flex: 1 1 0%;
+            }
+        }
+        
+        .appliance-categories {
+            margin-bottom: 1rem;
+        }
+        
+        .appliance-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            background-color: var(--bg-secondary);
+        }
+        
+        .appliance-library-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+        
+        .appliance-library-item:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .appliance-library-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-light);
+            border-radius: var(--radius);
+            margin-right: 0.75rem;
+            color: var(--primary);
+        }
+        
+        .appliance-library-info {
+            flex: 1;
+        }
+        
+        .appliance-library-info small {
+            display: block;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .energy-tips {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .energy-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--primary-light);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .energy-tip i {
+            color: var(--primary);
+            margin-top: 0.125rem;
+        }
+        
+        /* 电器计算器样式 */
+        .current-appliances {
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .appliance-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--gray-100);
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .appliance-header > div {
+            padding: 0 0.5rem;
+        }
+        
+        .appliance-items {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .appliance-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+        
+        .appliance-item:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .appliance-item:last-child {
+            border-bottom: none;
+        }
+        
+        .appliance-item > div {
+            padding: 0 0.5rem;
+        }
+        
+        .appliance-name small {
+            display: block;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .appliance-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .no-appliances {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: var(--text-tertiary);
+        }
+        
+        .no-appliances i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gray-300);
+        }
+        
+        .add-appliance-form {
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            background-color: var(--bg-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .usage-pattern {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .time-slots {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .time-slot-option {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .time-slot-option:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .time-slot-option.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .time-slot-option i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .time-slot-option.selected i {
+            color: var(--primary);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .appliance-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        
+        /* 结果区域样式 */
+        .energy-overview {
+            padding: 1.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .overview-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .overview-item {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .overview-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .overview-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .detailed-results {
+            margin-top: 1.5rem;
+        }
+        
+        .result-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .result-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        
+        .result-tab:hover {
+            color: var(--primary);
+        }
+        
+        .result-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .result-tab-content {
+            display: none;
+        }
+        
+        .result-tab-content.active {
+            display: block;
+        }
+        
+        .result-chart {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        @media (min-width: 640px) {
+            .summary-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .summary-item {
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        
+        .summary-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .cost-breakdown {
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-top: 1.5rem;
+        }
+        
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .breakdown-item {
+            text-align: center;
+            padding: 0.75rem;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+        }
+        
+        .breakdown-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .breakdown-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .breakdown-table {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+        
+        .breakdown-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .breakdown-table th,
+        .breakdown-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .breakdown-table th {
+            background-color: var(--gray-100);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .breakdown-table tr:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .breakdown-table .total-row {
+            background-color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .comparison-content {
+            padding: 1rem;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        @media (min-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .comparison-chart {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .savings-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .suggestion-item {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            background-color: var(--bg-primary);
+        }
+        
+        .suggestion-high {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .suggestion-medium {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .suggestion-low {
+            border-left: 4px solid var(--info);
+        }
+        
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .suggestion-header h5 {
+            margin-bottom: 0;
+        }
+        
+        .suggestion-priority {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            background-color: var(--gray-100);
+            color: var(--text-secondary);
+        }
+        
+        .suggestion-description {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .suggestion-savings {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .export-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        
+        .reference-table {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+        
+        .reference-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .reference-table th,
+        .reference-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .reference-table th {
+            background-color: var(--gray-100);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .reference-table tr:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .input-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</body>
+</html>
