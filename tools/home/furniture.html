@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家具摆放计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/home.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">家具摆放计算</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/home.html" class="nav-link">居家生活</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/home.html" class="breadcrumb-link">居家生活</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">家具摆放计算</span>
+                </nav>
+                
+                <h1 class="calculator-title">家具摆放计算器</h1>
+                <p class="calculator-description">规划家具布局，计算空间利用率，优化房间设计。</p>
+                
+                <div class="furniture-layout">
+                    <!-- 左侧控制面板 -->
+                    <div class="furniture-sidebar">
+                        <div class="calculator-card">
+                            <h3><i class="fas fa-home"></i> 房间设置</h3>
+                            
+                            <div class="input-group">
+                                <label class="input-label">房间类型</label>
+                                <select id="roomType" class="input-field">
+                                    <option value="living_room">客厅</option>
+                                    <option value="bedroom">卧室</option>
+                                    <option value="dining_room">餐厅</option>
+                                    <option value="study">书房</option>
+                                    <option value="kitchen">厨房</option>
+                                    <option value="custom">自定义</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label class="input-label">房间长度 (m)</label>
+                                    <input type="number" id="roomLength" class="input-field" placeholder="例如：4.5" min="1" step="0.1" value="4.5">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">房间宽度 (m)</label>
+                                    <input type="number" id="roomWidth" class="input-field" placeholder="例如：3.5" min="1" step="0.1" value="3.5">
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">房间高度 (m)</label>
+                                <input type="number" id="roomHeight" class="input-field" placeholder="例如：2.8" min="1.5" step="0.1" value="2.8">
+                            </div>
+                            
+                            <!-- 门窗设置 -->
+                            <div class="input-group">
+                                <label class="input-label">门窗位置</label>
+                                <div class="door-window-setup">
+                                    <button class="btn btn-sm btn-outline" id="addDoor"><i class="fas fa-door-closed"></i> 添加门</button>
+                                    <button class="btn btn-sm btn-outline" id="addWindow"><i class="fas fa-window-maximize"></i> 添加窗</button>
+                                </div>
+                            </div>
+                            
+                            <div class="door-window-list" id="doorWindowList">
+                                <!-- 门窗列表动态生成 -->
+                            </div>
+                            
+                            <button class="btn btn-primary btn-block mt-4" id="createRoom">
+                                <i class="fas fa-drafting-compass"></i> 创建房间平面图
+                            </button>
+                        </div>
+                        
+                        <!-- 家具库 -->
+                        <div class="calculator-card mt-4">
+                            <h3><i class="fas fa-couch"></i> 家具库</h3>
+                            
+                            <div class="furniture-categories">
+                                <div class="tabs">
+                                    <button class="tab active" data-category="living">客厅</button>
+                                    <button class="tab" data-category="bedroom">卧室</button>
+                                    <button class="tab" data-category="dining">餐厅</button>
+                                    <button class="tab" data-category="storage">储物</button>
+                                </div>
+                            </div>
+                            
+                            <div class="furniture-list" id="furnitureList">
+                                <!-- 家具列表动态生成 -->
+                            </div>
+                            
+                            <!-- 自定义家具 -->
+                            <div class="input-group mt-4">
+                                <label class="input-label">自定义家具</label>
+                                <div class="input-row">
+                                    <input type="text" id="customName" class="input-field" placeholder="家具名称">
+                                    <button class="btn btn-sm btn-outline" id="addCustom"><i class="fas fa-plus"></i> 添加</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 当前家具列表 -->
+                        <div class="calculator-card mt-4" id="currentFurnitureCard" style="display: none;">
+                            <h3><i class="fas fa-list"></i> 已添加家具</h3>
+                            <div class="current-furniture-list" id="currentFurnitureList">
+                                <!-- 已添加家具列表动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧主区域 -->
+                    <div class="furniture-main">
+                        <!-- 平面图区域 -->
+                        <div class="calculator-card">
+                            <div class="canvas-header">
+                                <h3><i class="fas fa-vector-square"></i> 房间平面图</h3>
+                                <div class="canvas-controls">
+                                    <button class="btn btn-sm btn-outline" id="clearCanvas"><i class="fas fa-trash"></i> 清空</button>
+                                    <button class="btn btn-sm btn-outline" id="saveLayout"><i class="fas fa-save"></i> 保存</button>
+                                    <button class="btn btn-sm btn-outline" id="loadLayout"><i class="fas fa-folder-open"></i> 加载</button>
+                                </div>
+                            </div>
+                            
+                            <div class="canvas-container">
+                                <canvas id="roomCanvas" width="800" height="500"></canvas>
+                                <div class="canvas-overlay" id="canvasOverlay">
+                                    <p>请先设置房间尺寸并创建平面图</p>
+                                    <button class="btn btn-primary" id="initCanvas">创建平面图</button>
+                                </div>
+                            </div>
+                            
+                            <div class="canvas-tools">
+                                <div class="tool-buttons">
+                                    <button class="btn btn-sm btn-outline tool-btn active" data-tool="select"><i class="fas fa-mouse-pointer"></i> 选择</button>
+                                    <button class="btn btn-sm btn-outline tool-btn" data-tool="move"><i class="fas fa-arrows-alt"></i> 移动</button>
+                                    <button class="btn btn-sm btn-outline tool-btn" data-tool="rotate"><i class="fas fa-sync-alt"></i> 旋转</button>
+                                    <button class="btn btn-sm btn-outline tool-btn" data-tool="delete"><i class="fas fa-trash"></i> 删除</button>
+                                </div>
+                                <div class="scale-info">
+                                    比例尺: <span id="scaleInfo">1:20</span> (1像素 = <span id="pixelToMeter">0.05</span>m)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算结果 -->
+                        <div class="calculator-card mt-4">
+                            <h3><i class="fas fa-chart-pie"></i> 空间分析</h3>
+                            
+                            <div class="result-grid">
+                                <div class="result-item">
+                                    <span class="result-label">房间面积</span>
+                                    <span class="result-value" id="roomArea">15.75 m²</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">家具占用面积</span>
+                                    <span class="result-value" id="furnitureArea">0 m²</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">可用面积</span>
+                                    <span class="result-value" id="availableArea">15.75 m²</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">空间利用率</span>
+                                    <span class="result-value" id="spaceUtilization">0%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 通行空间分析 -->
+                            <div class="space-analysis mt-4">
+                                <h4><i class="fas fa-walking"></i> 通行空间检查</h4>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">主通道宽度</span>
+                                        <span class="result-value" id="mainPathWidth">--</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">最小通道宽度</span>
+                                        <span class="result-value" id="minPathWidth">--</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">家具间距</span>
+                                        <span class="result-value" id="furnitureSpacing">--</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">通行评价</span>
+                                        <span class="result-value" id="pathRating">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 布局建议 -->
+                            <div class="layout-suggestions mt-4">
+                                <h4><i class="fas fa-lightbulb"></i> 布局建议</h4>
+                                <div class="suggestions-list" id="suggestionsList">
+                                    <div class="suggestion-item">
+                                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                        <span>房间面积充足，可以添加更多家具</span>
+                                    </div>
+                                    <div class="suggestion-item">
+                                        <i class="fas fa-info-circle" style="color: var(--info);"></i>
+                                        <span>确保主通道宽度至少0.8米便于通行</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 预算估算 -->
+                            <div class="budget-estimate mt-4">
+                                <h4><i class="fas fa-calculator"></i> 预算估算</h4>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label class="input-label">平均家具单价 (元)</label>
+                                        <input type="number" id="avgPrice" class="input-field" placeholder="例如：2000" value="2000" min="0">
+                                    </div>
+                                    <div class="input-group">
+                                        <label class="result-label">总预算估算</label>
+                                        <div class="result-value" id="totalBudget">0 元</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 常见布局模板 -->
+                        <div class="calculator-card mt-4">
+                            <h3><i class="fas fa-th-large"></i> 常见布局模板</h3>
+                            <p>选择预设布局快速应用常见房间设计方案</p>
+                            
+                            <div class="layout-templates">
+                                <div class="template-grid">
+                                    <div class="template-card" data-template="living_center">
+                                        <div class="template-preview">
+                                            <div class="template-shape" style="background: var(--primary-light);"></div>
+                                        </div>
+                                        <div class="template-info">
+                                            <h5>客厅中心式</h5>
+                                            <p>沙发围绕茶几，电视墙对面</p>
+                                        </div>
+                                    </div>
+                                    <div class="template-card" data-template="bedroom_simple">
+                                        <div class="template-preview">
+                                            <div class="template-shape" style="background: var(--success-light);"></div>
+                                        </div>
+                                        <div class="template-info">
+                                            <h5>卧室简约式</h5>
+                                            <p>床靠墙，衣柜与床平行</p>
+                                        </div>
+                                    </div>
+                                    <div class="template-card" data-template="dining_rect">
+                                        <div class="template-preview">
+                                            <div class="template-shape" style="background: var(--warning-light);"></div>
+                                        </div>
+                                        <div class="template-info">
+                                            <h5>餐厅矩形</h5>
+                                            <p>餐桌居中，餐边柜靠墙</p>
+                                        </div>
+                                    </div>
+                                    <div class="template-card" data-template="study_lshape">
+                                        <div class="template-preview">
+                                            <div class="template-shape" style="background: var(--danger-light);"></div>
+                                        </div>
+                                        <div class="template-info">
+                                            <h5>书房L形</h5>
+                                            <p>书桌L形摆放，书架靠墙</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-secondary" id="applyTemplate">
+                                        <i class="fas fa-magic"></i> 应用选中模板
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 使用说明 -->
+                <div class="alert alert-info mt-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-lightbulb mr-3"></i>
+                        <div>
+                            <strong>使用说明</strong>
+                            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                <li><strong>设置房间</strong>: 首先输入房间尺寸，点击"创建房间平面图"</li>
+                                <li><strong>添加家具</strong>: 从家具库中选择或自定义家具，拖拽到平面图中</li>
+                                <li><strong>调整布局</strong>: 使用选择、移动、旋转工具调整家具位置和方向</li>
+                                <li><strong>分析优化</strong>: 查看空间利用率、通行空间分析和布局建议</li>
+                                <li><strong>保存分享</strong>: 保存当前布局或加载之前的设计</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 设计参考标准 -->
+                <div class="reference-card mt-6">
+                    <h3><i class="fas fa-ruler-combined"></i> 家具布局设计标准参考</h3>
+                    <div class="result-grid mt-4">
+                        <div class="result-item">
+                            <span class="result-label">主要通道宽度</span>
+                            <span class="result-value">≥ 0.9-1.2米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">次要通道宽度</span>
+                            <span class="result-value">≥ 0.6-0.8米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">床周通道</span>
+                            <span class="result-value">≥ 0.5米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">家具间距</span>
+                            <span class="result-value">≥ 0.3-0.5米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">开门空间</span>
+                            <span class="result-value">≥ 0.4-0.6米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">坐姿活动空间</span>
+                            <span class="result-value">≥ 0.6-0.8米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">厨房操作台深度</span>
+                            <span class="result-value">0.6米</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">电视观看距离</span>
+                            <span class="result-value">2-3倍屏幕尺寸</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">居家工具</h4>
+                    <a href="utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="area-volume.html" class="footer-link">面积体积计算</a>
+                    <a href="paint-calc.html" class="footer-link">涂料用量计算</a>
+                    <a href="cooking-convert.html" class="footer-link">食材换算</a>
+                    <a href="cooking-time.html" class="footer-link">烹饪时间计算</a>
+                    <a href="furniture-arrangement.html" class="footer-link active">家具摆放计算</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/home.html" class="footer-link">返回居家生活</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../shopping/discount.html" class="footer-link">折扣计算器</a>
+                    <a href="../finance/interest.html" class="footer-link">利息计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 家具摆放计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/home.html" class="nav-item active">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">居家</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 家具数据库
+        const furnitureDB = {
+            living: [
+                {id: 'sofa_3', name: '三人沙发', width: 2.1, depth: 0.9, height: 0.85, color: '#8B4513', type: 'sofa'},
+                {id: 'sofa_2', name: '双人沙发', width: 1.6, depth: 0.9, height: 0.85, color: '#A0522D', type: 'sofa'},
+                {id: 'sofa_1', name: '单人沙发', width: 0.9, depth: 0.9, height: 0.85, color: '#D2691E', type: 'sofa'},
+                {id: 'tv_stand', name: '电视柜', width: 1.8, depth: 0.4, height: 0.5, color: '#696969', type: 'storage'},
+                {id: 'coffee_table', name: '茶几', width: 1.2, depth: 0.6, height: 0.4, color: '#8B4513', type: 'table'},
+                {id: 'bookshelf', name: '书架', width: 0.8, depth: 0.3, height: 1.8, color: '#D2B48C', type: 'storage'}
+            ],
+            bedroom: [
+                {id: 'bed_double', name: '双人床', width: 1.8, depth: 2.0, height: 0.5, color: '#4B0082', type: 'bed'},
+                {id: 'bed_single', name: '单人床', width: 1.2, depth: 2.0, height: 0.5, color: '#6A5ACD', type: 'bed'},
+                {id: 'wardrobe', name: '衣柜', width: 1.8, depth: 0.6, height: 2.0, color: '#708090', type: 'storage'},
+                {id: 'nightstand', name: '床头柜', width: 0.5, depth: 0.5, height: 0.6, color: '#D2B48C', type: 'table'},
+                {id: 'dresser', name: '梳妆台', width: 1.2, depth: 0.5, height: 0.75, color: '#F5DEB3', type: 'table'}
+            ],
+            dining: [
+                {id: 'dining_table', name: '餐桌', width: 1.4, depth: 0.8, height: 0.75, color: '#8B4513', type: 'table'},
+                {id: 'dining_chair', name: '餐椅', width: 0.5, depth: 0.5, height: 0.9, color: '#A0522D', type: 'chair'},
+                {id: 'sideboard', name: '餐边柜', width: 1.5, depth: 0.45, height: 0.9, color: '#696969', type: 'storage'},
+                {id: 'china_cabinet', name: '酒柜', width: 0.9, depth: 0.35, height: 1.8, color: '#D2B48C', type: 'storage'}
+            ],
+            storage: [
+                {id: 'cabinet', name: '储物柜', width: 1.0, depth: 0.4, height: 2.0, color: '#708090', type: 'storage'},
+                {id: 'shelf', name: '置物架', width: 0.8, depth: 0.3, height: 1.5, color: '#D2B48C', type: 'storage'},
+                {id: 'desk', name: '书桌', width: 1.2, depth: 0.6, height: 0.75, color: '#8B4513', type: 'table'},
+                {id: 'office_chair', name: '办公椅', width: 0.6, depth: 0.6, height: 1.0, color: '#4682B4', type: 'chair'}
+            ]
+        };
+
+        // 房间预设
+        const roomPresets = {
+            living_room: {name: '客厅', length: 4.5, width: 3.5, height: 2.8},
+            bedroom: {name: '卧室', length: 3.6, width: 3.0, height: 2.8},
+            dining_room: {name: '餐厅', length: 3.0, width: 2.8, height: 2.8},
+            study: {name: '书房', length: 2.8, width: 2.5, height: 2.8},
+            kitchen: {name: '厨房', length: 2.5, width: 2.0, height: 2.4}
+        };
+
+        // 全局变量
+        let canvas, ctx;
+        let room = {length: 4.5, width: 3.5, height: 2.8};
+        let furnitureItems = [];
+        let doorsWindows = [];
+        let selectedTool = 'select';
+        let selectedFurniture = null;
+        let scale = 20; // 像素/米
+        let isDragging = false;
+        let dragStart = {x: 0, y: 0};
+        let canvasOffset = {x: 50, y: 50};
+        
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initCanvas();
+            initEventListeners();
+            loadFurnitureList();
+            initTheme();
+        });
+        
+        // 初始化画布
+        function initCanvas() {
+            canvas = document.getElementById('roomCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // 设置画布事件监听
+            canvas.addEventListener('mousedown', handleCanvasMouseDown);
+            canvas.addEventListener('mousemove', handleCanvasMouseMove);
+            canvas.addEventListener('mouseup', handleCanvasMouseUp);
+            canvas.addEventListener('click', handleCanvasClick);
+            
+            // 初始绘制
+            drawRoom();
+        }
+        
+        // 初始化事件监听
+        function initEventListeners() {
+            // 房间类型变化
+            document.getElementById('roomType').addEventListener('change', function() {
+                const type = this.value;
+                if(type !== 'custom' && roomPresets[type]) {
+                    const preset = roomPresets[type];
+                    document.getElementById('roomLength').value = preset.length;
+                    document.getElementById('roomWidth').value = preset.width;
+                    document.getElementById('roomHeight').value = preset.height;
+                }
+            });
+            
+            // 创建房间
+            document.getElementById('createRoom').addEventListener('click', createRoom);
+            document.getElementById('initCanvas').addEventListener('click', createRoom);
+            
+            // 家具分类切换
+            document.querySelectorAll('.furniture-categories .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // 更新标签状态
+                    document.querySelectorAll('.furniture-categories .tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 加载对应分类的家具
+                    loadFurnitureList(category);
+                });
+            });
+            
+            // 添加自定义家具
+            document.getElementById('addCustom').addEventListener('click', function() {
+                const name = document.getElementById('customName').value.trim();
+                if(name) {
+                    addCustomFurniture(name);
+                    document.getElementById('customName').value = '';
+                }
+            });
+            
+            // 添加门窗
+            document.getElementById('addDoor').addEventListener('click', addDoor);
+            document.getElementById('addWindow').addEventListener('click', addWindow);
+            
+            // 工具选择
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tool = this.getAttribute('data-tool');
+                    selectTool(tool);
+                });
+            });
+            
+            // 画布控制
+            document.getElementById('clearCanvas').addEventListener('click', clearCanvas);
+            document.getElementById('saveLayout').addEventListener('click', saveLayout);
+            document.getElementById('loadLayout').addEventListener('click', loadLayout);
+            
+            // 应用模板
+            document.getElementById('applyTemplate').addEventListener('click', applyTemplate);
+            
+            // 预算计算
+            document.getElementById('avgPrice').addEventListener('input', calculateBudget);
+            
+            // 模板选择
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.template-card').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+        }
+        
+        // 加载家具列表
+        function loadFurnitureList(category = 'living') {
+            const furnitureList = document.getElementById('furnitureList');
+            furnitureList.innerHTML = '';
+            
+            const items = furnitureDB[category] || [];
+            
+            items.forEach(item => {
+                const furnitureItem = document.createElement('div');
+                furnitureItem.className = 'furniture-item';
+                furnitureItem.setAttribute('data-id', item.id);
+                furnitureItem.setAttribute('draggable', 'true');
+                furnitureItem.innerHTML = `
+                    <div class="furniture-icon" style="background-color: ${item.color};"></div>
+                    <div class="furniture-info">
+                        <strong>${item.name}</strong>
+                        <small>${item.width}×${item.depth}m</small>
+                    </div>
+                `;
+                
+                // 添加拖拽事件
+                furnitureItem.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', JSON.stringify(item));
+                });
+                
+                furnitureList.appendChild(furnitureItem);
+            });
+            
+            // 允许画布接收拖拽
+            canvas.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            canvas.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text/plain');
+                if(data) {
+                    const furniture = JSON.parse(data);
+                    const rect = canvas.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - canvasOffset.x) / scale;
+                    const y = (e.clientY - rect.top - canvasOffset.y) / scale;
+                    
+                    addFurnitureToRoom(furniture, x, y);
+                }
+            });
+        }
+        
+        // 创建房间
+        function createRoom() {
+            const length = parseFloat(document.getElementById('roomLength').value) || 4.5;
+            const width = parseFloat(document.getElementById('roomWidth').value) || 3.5;
+            const height = parseFloat(document.getElementById('roomHeight').value) || 2.8;
+            
+            room = {length, width, height};
+            furnitureItems = [];
+            doorsWindows = [];
+            selectedFurniture = null;
+            
+            // 隐藏覆盖层
+            document.getElementById('canvasOverlay').style.display = 'none';
+            
+            // 更新当前家具列表显示
+            document.getElementById('currentFurnitureCard').style.display = 'block';
+            updateCurrentFurnitureList();
+            
+            // 绘制房间
+            drawRoom();
+            updateCalculations();
+        }
+        
+        // 绘制房间
+        function drawRoom() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 计算房间在画布上的尺寸
+            const roomWidthPx = room.width * scale;
+            const roomHeightPx = room.length * scale;
+            
+            // 绘制房间背景
+            ctx.fillStyle = 'var(--bg-secondary)';
+            ctx.fillRect(canvasOffset.x, canvasOffset.y, roomWidthPx, roomHeightPx);
+            
+            // 绘制房间边框
+            ctx.strokeStyle = 'var(--text-primary)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(canvasOffset.x, canvasOffset.y, roomWidthPx, roomHeightPx);
+            
+            // 绘制网格
+            drawGrid();
+            
+            // 绘制门窗
+            drawDoorsWindows();
+            
+            // 绘制家具
+            drawFurniture();
+            
+            // 绘制尺寸标注
+            drawDimensions();
+            
+            // 绘制选中家具的轮廓
+            if(selectedFurniture) {
+                drawSelectedOutline();
+            }
+        }
+        
+        // 绘制网格
+        function drawGrid() {
+            const roomWidthPx = room.width * scale;
+            const roomHeightPx = room.length * scale;
+            
+            ctx.strokeStyle = 'var(--border-light)';
+            ctx.lineWidth = 0.5;
+            
+            // 垂直线
+            for(let x = 0; x <= room.width; x += 0.5) {
+                const xPx = canvasOffset.x + x * scale;
+                ctx.beginPath();
+                ctx.moveTo(xPx, canvasOffset.y);
+                ctx.lineTo(xPx, canvasOffset.y + roomHeightPx);
+                ctx.stroke();
+            }
+            
+            // 水平线
+            for(let y = 0; y <= room.length; y += 0.5) {
+                const yPx = canvasOffset.y + y * scale;
+                ctx.beginPath();
+                ctx.moveTo(canvasOffset.x, yPx);
+                ctx.lineTo(canvasOffset.x + roomWidthPx, yPx);
+                ctx.stroke();
+            }
+        }
+        
+        // 绘制门窗
+        function drawDoorsWindows() {
+            doorsWindows.forEach(dw => {
+                const xPx = canvasOffset.x + dw.x * scale;
+                const yPx = canvasOffset.y + dw.y * scale;
+                
+                if(dw.type === 'door') {
+                    // 绘制门
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(xPx, yPx, dw.width * scale, dw.height * scale);
+                    ctx.strokeStyle = '#654321';
+                    ctx.strokeRect(xPx, yPx, dw.width * scale, dw.height * scale);
+                    
+                    // 门扇弧线
+                    ctx.beginPath();
+                    if(dw.orientation === 'vertical') {
+                        ctx.arc(xPx, yPx + dw.height * scale, dw.width * scale, Math.PI, Math.PI * 1.5);
+                    } else {
+                        ctx.arc(xPx + dw.width * scale, yPx, dw.height * scale, Math.PI * 1.5, Math.PI * 2);
+                    }
+                    ctx.stroke();
+                } else {
+                    // 绘制窗户
+                    ctx.fillStyle = 'rgba(135, 206, 235, 0.3)';
+                    ctx.fillRect(xPx, yPx, dw.width * scale, dw.height * scale);
+                    ctx.strokeStyle = '#4682B4';
+                    ctx.strokeRect(xPx, yPx, dw.width * scale, dw.height * scale);
+                    
+                    // 窗格
+                    ctx.beginPath();
+                    ctx.moveTo(xPx, yPx + dw.height * scale / 2);
+                    ctx.lineTo(xPx + dw.width * scale, yPx + dw.height * scale / 2);
+                    ctx.moveTo(xPx + dw.width * scale / 2, yPx);
+                    ctx.lineTo(xPx + dw.width * scale / 2, yPx + dw.height * scale);
+                    ctx.stroke();
+                }
+            });
+        }
+        
+        // 绘制家具
+        function drawFurniture() {
+            furnitureItems.forEach(item => {
+                const xPx = canvasOffset.x + item.x * scale;
+                const yPx = canvasOffset.y + item.y * scale;
+                const widthPx = item.width * scale;
+                const depthPx = item.depth * scale;
+                
+                // 保存画布状态
+                ctx.save();
+                
+                // 设置旋转中心并旋转
+                const centerX = xPx + widthPx / 2;
+                const centerY = yPx + depthPx / 2;
+                ctx.translate(centerX, centerY);
+                ctx.rotate(item.rotation * Math.PI / 180);
+                ctx.translate(-centerX, -centerY);
+                
+                // 绘制家具主体
+                ctx.fillStyle = item.color;
+                ctx.fillRect(xPx, yPx, widthPx, depthPx);
+                
+                // 绘制家具边框
+                ctx.strokeStyle = item === selectedFurniture ? 'var(--primary)' : 'var(--text-primary)';
+                ctx.lineWidth = item === selectedFurniture ? 3 : 1;
+                ctx.strokeRect(xPx, yPx, widthPx, depthPx);
+                
+                // 绘制家具图标
+                drawFurnitureIcon(item, xPx, yPx, widthPx, depthPx);
+                
+                // 恢复画布状态
+                ctx.restore();
+                
+                // 绘制尺寸标签
+                if(item === selectedFurniture) {
+                    ctx.fillStyle = 'var(--text-primary)';
+                    ctx.font = '12px Arial';
+                    ctx.fillText(`${item.width}m × ${item.depth}m`, xPx, yPx - 5);
+                }
+            });
+        }
+        
+        // 绘制家具图标
+        function drawFurnitureIcon(item, x, y, width, height) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            
+            switch(item.type) {
+                case 'sofa':
+                    // 沙发图标
+                    ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.6);
+                    ctx.fillRect(x + width * 0.05, y + height * 0.1, width * 0.05, height * 0.6);
+                    ctx.fillRect(x + width * 0.9, y + height * 0.1, width * 0.05, height * 0.6);
+                    break;
+                case 'bed':
+                    // 床图标
+                    ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.7);
+                    ctx.fillRect(x + width * 0.7, y + height * 0.1, width * 0.2, height * 0.15);
+                    break;
+                case 'table':
+                    // 桌子图标
+                    ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.8);
+                    break;
+                case 'chair':
+                    // 椅子图标
+                    ctx.fillRect(x + width * 0.3, y + height * 0.2, width * 0.4, height * 0.4);
+                    ctx.fillRect(x + width * 0.3, y + height * 0.6, width * 0.4, height * 0.2);
+                    break;
+                case 'storage':
+                    // 储物柜图标
+                    ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.8);
+                    // 柜门
+                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.lineWidth = 1;
+                    for(let i = 0; i < 3; i++) {
+                        ctx.strokeRect(x + width * (0.15 + i * 0.25), y + height * 0.2, width * 0.2, height * 0.6);
+                    }
+                    break;
+            }
+        }
+        
+        // 绘制尺寸标注
+        function drawDimensions() {
+            const roomWidthPx = room.width * scale;
+            const roomHeightPx = room.length * scale;
+            
+            ctx.strokeStyle = 'var(--text-secondary)';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = 'var(--text-secondary)';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            
+            // 宽度标注
+            ctx.beginPath();
+            ctx.moveTo(canvasOffset.x, canvasOffset.y - 20);
+            ctx.lineTo(canvasOffset.x + roomWidthPx, canvasOffset.y - 20);
+            ctx.moveTo(canvasOffset.x, canvasOffset.y - 15);
+            ctx.lineTo(canvasOffset.x, canvasOffset.y - 25);
+            ctx.moveTo(canvasOffset.x + roomWidthPx, canvasOffset.y - 15);
+            ctx.lineTo(canvasOffset.x + roomWidthPx, canvasOffset.y - 25);
+            ctx.stroke();
+            ctx.fillText(`${room.width}m`, canvasOffset.x + roomWidthPx / 2, canvasOffset.y - 25);
+            
+            // 长度标注
+            ctx.beginPath();
+            ctx.moveTo(canvasOffset.x - 20, canvasOffset.y);
+            ctx.lineTo(canvasOffset.x - 20, canvasOffset.y + roomHeightPx);
+            ctx.moveTo(canvasOffset.x - 15, canvasOffset.y);
+            ctx.lineTo(canvasOffset.x - 25, canvasOffset.y);
+            ctx.moveTo(canvasOffset.x - 15, canvasOffset.y + roomHeightPx);
+            ctx.lineTo(canvasOffset.x - 25, canvasOffset.y + roomHeightPx);
+            ctx.stroke();
+            ctx.save();
+            ctx.translate(canvasOffset.x - 35, canvasOffset.y + roomHeightPx / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(`${room.length}m`, 0, 0);
+            ctx.restore();
+        }
+        
+        // 绘制选中轮廓
+        function drawSelectedOutline() {
+            const xPx = canvasOffset.x + selectedFurniture.x * scale;
+            const yPx = canvasOffset.y + selectedFurniture.y * scale;
+            const widthPx = selectedFurniture.width * scale;
+            const depthPx = selectedFurniture.depth * scale;
+            
+            ctx.save();
+            
+            // 设置旋转
+            const centerX = xPx + widthPx / 2;
+            const centerY = yPx + depthPx / 2;
+            ctx.translate(centerX, centerY);
+            ctx.rotate(selectedFurniture.rotation * Math.PI / 180);
+            ctx.translate(-centerX, -centerY);
+            
+            // 绘制选中轮廓
+            ctx.strokeStyle = 'var(--primary)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 3]);
+            ctx.strokeRect(xPx - 2, yPx - 2, widthPx + 4, depthPx + 4);
+            ctx.setLineDash([]);
+            
+            // 绘制控制点
+            ctx.fillStyle = 'var(--primary)';
+            // 旋转控制点
+            ctx.fillRect(centerX - 3, yPx - 20, 6, 6);
+            // 移动控制点
+            ctx.fillRect(xPx - 3, yPx - 3, 6, 6);
+            ctx.fillRect(xPx + widthPx - 3, yPx - 3, 6, 6);
+            ctx.fillRect(xPx - 3, yPx + depthPx - 3, 6, 6);
+            ctx.fillRect(xPx + widthPx - 3, yPx + depthPx - 3, 6, 6);
+            
+            ctx.restore();
+        }
+        
+        // 添加家具到房间
+        function addFurnitureToRoom(furniture, x, y) {
+            // 确保家具在房间内
+            const adjustedX = Math.max(0, Math.min(x, room.width - furniture.width));
+            const adjustedY = Math.max(0, Math.min(y, room.length - furniture.depth));
+            
+            const newFurniture = {
+                ...furniture,
+                x: adjustedX,
+                y: adjustedY,
+                rotation: 0,
+                id: Date.now() + Math.random()
+            };
+            
+            furnitureItems.push(newFurniture);
+            selectedFurniture = newFurniture;
+            
+            drawRoom();
+            updateCurrentFurnitureList();
+            updateCalculations();
+        }
+        
+        // 添加自定义家具
+        function addCustomFurniture(name) {
+            const customItem = {
+                id: 'custom_' + Date.now(),
+                name: name,
+                width: 1.0,
+                depth: 0.5,
+                height: 1.0,
+                color: '#808080',
+                type: 'custom'
+            };
+            
+            const furnitureList = document.getElementById('furnitureList');
+            const furnitureItem = document.createElement('div');
+            furnitureItem.className = 'furniture-item';
+            furnitureItem.setAttribute('data-id', customItem.id);
+            furnitureItem.setAttribute('draggable', 'true');
+            furnitureItem.innerHTML = `
+                <div class="furniture-icon" style="background-color: ${customItem.color};"></div>
+                <div class="furniture-info">
+                    <strong>${customItem.name}</strong>
+                    <small>${customItem.width}×${customItem.depth}m</small>
+                </div>
+            `;
+            
+            furnitureItem.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('text/plain', JSON.stringify(customItem));
+            });
+            
+            furnitureList.appendChild(furnitureItem);
+        }
+        
+        // 添加门
+        function addDoor() {
+            const door = {
+                id: 'door_' + Date.now(),
+                type: 'door',
+                width: 0.9,
+                height: 2.1,
+                x: 0,
+                y: 0,
+                orientation: 'vertical'
+            };
+            
+            doorsWindows.push(door);
+            updateDoorWindowList();
+            drawRoom();
+        }
+        
+        // 添加窗户
+        function addWindow() {
+            const window = {
+                id: 'window_' + Date.now(),
+                type: 'window',
+                width: 1.5,
+                height: 1.2,
+                x: 1.0,
+                y: 0.8,
+                orientation: 'horizontal'
+            };
+            
+            doorsWindows.push(window);
+            updateDoorWindowList();
+            drawRoom();
+        }
+        
+        // 更新门窗列表
+        function updateDoorWindowList() {
+            const list = document.getElementById('doorWindowList');
+            list.innerHTML = '';
+            
+            doorsWindows.forEach(dw => {
+                const item = document.createElement('div');
+                item.className = 'door-window-item';
+                item.innerHTML = `
+                    <div class="dw-icon">
+                        <i class="fas fa-${dw.type === 'door' ? 'door-closed' : 'window-maximize'}"></i>
+                    </div>
+                    <div class="dw-info">
+                        <small>${dw.type === 'door' ? '门' : '窗'} ${dw.width}m×${dw.height}m</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline remove-dw" data-id="${dw.id}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                list.appendChild(item);
+            });
+            
+            // 绑定删除事件
+            document.querySelectorAll('.remove-dw').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    doorsWindows = doorsWindows.filter(dw => dw.id !== id);
+                    updateDoorWindowList();
+                    drawRoom();
+                });
+            });
+        }
+        
+        // 更新当前家具列表
+        function updateCurrentFurnitureList() {
+            const list = document.getElementById('currentFurnitureList');
+            list.innerHTML = '';
+            
+            furnitureItems.forEach((item, index) => {
+                const listItem = document.createElement('div');
+                listItem.className = 'current-furniture-item';
+                if(item === selectedFurniture) {
+                    listItem.classList.add('selected');
+                }
+                
+                listItem.innerHTML = `
+                    <div class="cf-icon" style="background-color: ${item.color};"></div>
+                    <div class="cf-info">
+                        <strong>${item.name}</strong>
+                        <small>位置: (${item.x.toFixed(2)}, ${item.y.toFixed(2)}) | 尺寸: ${item.width}×${item.depth}m</small>
+                    </div>
+                    <div class="cf-actions">
+                        <button class="btn btn-sm btn-outline select-furniture" data-index="${index}">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline remove-furniture" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                list.appendChild(listItem);
+            });
+            
+            // 绑定选择事件
+            document.querySelectorAll('.select-furniture').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    selectedFurniture = furnitureItems[index];
+                    drawRoom();
+                    updateCurrentFurnitureList();
+                });
+            });
+            
+            // 绑定删除事件
+            document.querySelectorAll('.remove-furniture').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    furnitureItems.splice(index, 1);
+                    selectedFurniture = null;
+                    drawRoom();
+                    updateCurrentFurnitureList();
+                    updateCalculations();
+                });
+            });
+        }
+        
+        // 选择工具
+        function selectTool(tool) {
+            selectedTool = tool;
+            
+            // 更新工具按钮状态
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                if(btn.getAttribute('data-tool') === tool) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // 画布鼠标事件处理
+        function handleCanvasMouseDown(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left - canvasOffset.x) / scale;
+            const y = (e.clientY - rect.top - canvasOffset.y) / scale;
+            
+            // 检查是否点击了家具
+            selectedFurniture = getFurnitureAtPoint(x, y);
+            
+            if(selectedFurniture) {
+                isDragging = true;
+                dragStart = {x, y, furnitureX: selectedFurniture.x, furnitureY: selectedFurniture.y};
+                
+                // 更新当前家具列表
+                updateCurrentFurnitureList();
+            }
+            
+            drawRoom();
+        }
+        
+        function handleCanvasMouseMove(e) {
+            if(!isDragging || !selectedFurniture) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left - canvasOffset.x) / scale;
+            const y = (e.clientY - rect.top - canvasOffset.y) / scale;
+            
+            const dx = x - dragStart.x;
+            const dy = y - dragStart.y;
+            
+            if(selectedTool === 'move') {
+                // 移动家具
+                selectedFurniture.x = Math.max(0, Math.min(dragStart.furnitureX + dx, room.width - selectedFurniture.width));
+                selectedFurniture.y = Math.max(0, Math.min(dragStart.furnitureY + dy, room.length - selectedFurniture.depth));
+            } else if(selectedTool === 'rotate') {
+                // 旋转家具
+                selectedFurniture.rotation = (selectedFurniture.rotation + 5) % 360;
+            }
+            
+            drawRoom();
+        }
+        
+        function handleCanvasMouseUp() {
+            isDragging = false;
+            updateCalculations();
+            updateCurrentFurnitureList();
+        }
+        
+        function handleCanvasClick(e) {
+            if(selectedTool === 'delete' && selectedFurniture) {
+                // 删除家具
+                const index = furnitureItems.indexOf(selectedFurniture);
+                if(index !== -1) {
+                    furnitureItems.splice(index, 1);
+                    selectedFurniture = null;
+                    drawRoom();
+                    updateCurrentFurnitureList();
+                    updateCalculations();
+                }
+            }
+        }
+        
+        // 获取点击位置的家具
+        function getFurnitureAtPoint(x, y) {
+            for(let i = furnitureItems.length - 1; i >= 0; i--) {
+                const item = furnitureItems[i];
+                
+                // 简化检查：假设家具为轴对齐矩形
+                if(x >= item.x && x <= item.x + item.width &&
+                   y >= item.y && y <= item.y + item.depth) {
+                    return item;
+                }
+            }
+            return null;
+        }
+        
+        // 更新计算结果
+        function updateCalculations() {
+            // 计算房间面积
+            const roomArea = room.length * room.width;
+            
+            // 计算家具总面积
+            let furnitureArea = 0;
+            furnitureItems.forEach(item => {
+                furnitureArea += item.width * item.depth;
+            });
+            
+            // 计算可用面积
+            const availableArea = roomArea - furnitureArea;
+            
+            // 计算空间利用率
+            const utilization = roomArea > 0 ? (furnitureArea / roomArea * 100) : 0;
+            
+            // 更新显示
+            document.getElementById('roomArea').textContent = `${roomArea.toFixed(2)} m²`;
+            document.getElementById('furnitureArea').textContent = `${furnitureArea.toFixed(2)} m²`;
+            document.getElementById('availableArea').textContent = `${availableArea.toFixed(2)} m²`;
+            document.getElementById('spaceUtilization').textContent = `${utilization.toFixed(1)}%`;
+            
+            // 分析通行空间
+            analyzePathways();
+            
+            // 生成布局建议
+            generateSuggestions(utilization);
+            
+            // 计算预算
+            calculateBudget();
+        }
+        
+        // 分析通行空间
+        function analyzePathways() {
+            // 简化的通行空间分析
+            let mainPathWidth = room.width;
+            let minPathWidth = room.width;
+            
+            furnitureItems.forEach(item => {
+                // 粗略估计通道宽度
+                const rightSpace = room.width - (item.x + item.width);
+                const leftSpace = item.x;
+                const pathWidth = Math.min(rightSpace, leftSpace);
+                
+                if(pathWidth < minPathWidth) {
+                    minPathWidth = pathWidth;
+                }
+            });
+            
+            mainPathWidth = minPathWidth;
+            
+            // 更新显示
+            document.getElementById('mainPathWidth').textContent = `${mainPathWidth.toFixed(2)} m`;
+            document.getElementById('minPathWidth').textContent = `${minPathWidth.toFixed(2)} m`;
+            
+            // 计算平均家具间距（简化）
+            let totalSpacing = 0;
+            if(furnitureItems.length > 1) {
+                for(let i = 0; i < furnitureItems.length; i++) {
+                    for(let j = i + 1; j < furnitureItems.length; j++) {
+                        const item1 = furnitureItems[i];
+                        const item2 = furnitureItems[j];
+                        const dx = Math.abs(item1.x - item2.x);
+                        const dy = Math.abs(item1.y - item2.y);
+                        totalSpacing += Math.sqrt(dx * dx + dy * dy);
+                    }
+                }
+                totalSpacing /= (furnitureItems.length * (furnitureItems.length - 1) / 2);
+            }
+            
+            document.getElementById('furnitureSpacing').textContent = 
+                furnitureItems.length > 1 ? `${totalSpacing.toFixed(2)} m` : '--';
+            
+            // 通行评价
+            let rating = '优秀';
+            let ratingColor = 'var(--success)';
+            
+            if(mainPathWidth < 0.6) {
+                rating = '拥挤';
+                ratingColor = 'var(--danger)';
+            } else if(mainPathWidth < 0.9) {
+                rating = '一般';
+                ratingColor = 'var(--warning)';
+            }
+            
+            const ratingElement = document.getElementById('pathRating');
+            ratingElement.textContent = rating;
+            ratingElement.style.color = ratingColor;
+        }
+        
+        // 生成布局建议
+        function generateSuggestions(utilization) {
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = '';
+            
+            const suggestions = [];
+            
+            // 根据空间利用率给出建议
+            if(utilization < 30) {
+                suggestions.push({
+                    icon: 'fa-info-circle',
+                    color: 'var(--info)',
+                    text: '空间利用率较低，可以考虑添加更多家具或装饰'
+                });
+            } else if(utilization > 70) {
+                suggestions.push({
+                    icon: 'fa-exclamation-triangle',
+                    color: 'var(--warning)',
+                    text: '空间利用率较高，可能影响通行和活动空间'
+                });
+            }
+            
+            // 检查通行空间
+            const mainPathWidth = parseFloat(document.getElementById('mainPathWidth').textContent) || 0;
+            if(mainPathWidth < 0.9 && mainPathWidth > 0) {
+                suggestions.push({
+                    icon: 'fa-exclamation-circle',
+                    color: 'var(--danger)',
+                    text: '主通道宽度不足0.9米，建议调整家具布局'
+                });
+            }
+            
+            // 检查家具数量
+            if(furnitureItems.length === 0) {
+                suggestions.push({
+                    icon: 'fa-lightbulb',
+                    color: 'var(--info)',
+                    text: '还没有添加家具，请从左侧家具库拖拽家具到平面图中'
+                });
+            }
+            
+            // 通用建议
+            suggestions.push({
+                icon: 'fa-check-circle',
+                color: 'var(--success)',
+                text: '确保床和沙发等主要家具周围有至少0.5米的活动空间'
+            });
+            
+            suggestions.push({
+                icon: 'fa-check-circle',
+                color: 'var(--success)',
+                text: '电视观看距离应为屏幕尺寸的2-3倍'
+            });
+            
+            // 显示建议
+            suggestions.forEach(suggestion => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <i class="fas ${suggestion.icon}" style="color: ${suggestion.color};"></i>
+                    <span>${suggestion.text}</span>
+                `;
+                suggestionsList.appendChild(item);
+            });
+        }
+        
+        // 计算预算
+        function calculateBudget() {
+            const avgPrice = parseFloat(document.getElementById('avgPrice').value) || 0;
+            const totalBudget = furnitureItems.length * avgPrice;
+            
+            document.getElementById('totalBudget').textContent = 
+                totalBudget.toFixed(0) + ' 元';
+        }
+        
+        // 应用模板
+        function applyTemplate() {
+            const selectedTemplate = document.querySelector('.template-card.selected');
+            if(!selectedTemplate) {
+                alert('请先选择一个布局模板');
+                return;
+            }
+            
+            const template = selectedTemplate.getAttribute('data-template');
+            
+            // 清空现有家具
+            furnitureItems = [];
+            
+            // 根据模板添加家具
+            switch(template) {
+                case 'living_center':
+                    // 客厅中心式布局
+                    furnitureItems.push({
+                        id: 'sofa_center',
+                        name: '三人沙发',
+                        width: 2.1,
+                        depth: 0.9,
+                        height: 0.85,
+                        color: '#8B4513',
+                        type: 'sofa',
+                        x: room.width/2 - 1.05,
+                        y: room.length/2 - 0.45,
+                        rotation: 0
+                    });
+                    furnitureItems.push({
+                        id: 'tv_stand_center',
+                        name: '电视柜',
+                        width: 1.8,
+                        depth: 0.4,
+                        height: 0.5,
+                        color: '#696969',
+                        type: 'storage',
+                        x: room.width/2 - 0.9,
+                        y: 0.5,
+                        rotation: 0
+                    });
+                    furnitureItems.push({
+                        id: 'coffee_table_center',
+                        name: '茶几',
+                        width: 1.2,
+                        depth: 0.6,
+                        height: 0.4,
+                        color: '#8B4513',
+                        type: 'table',
+                        x: room.width/2 - 0.6,
+                        y: room.length/2 + 0.3,
+                        rotation: 0
+                    });
+                    break;
+                    
+                case 'bedroom_simple':
+                    // 卧室简约式布局
+                    furnitureItems.push({
+                        id: 'bed_simple',
+                        name: '双人床',
+                        width: 1.8,
+                        depth: 2.0,
+                        height: 0.5,
+                        color: '#4B0082',
+                        type: 'bed',
+                        x: 0.5,
+                        y: room.length/2 - 1.0,
+                        rotation: 0
+                    });
+                    furnitureItems.push({
+                        id: 'wardrobe_simple',
+                        name: '衣柜',
+                        width: 1.8,
+                        depth: 0.6,
+                        height: 2.0,
+                        color: '#708090',
+                        type: 'storage',
+                        x: room.width - 2.0,
+                        y: 0.5,
+                        rotation: 0
+                    });
+                    furnitureItems.push({
+                        id: 'nightstand_simple',
+                        name: '床头柜',
+                        width: 0.5,
+                        depth: 0.5,
+                        height: 0.6,
+                        color: '#D2B48C',
+                        type: 'table',
+                        x: 0.5,
+                        y: room.length/2 + 1.0,
+                        rotation: 0
+                    });
+                    break;
+                    
+                // 可以添加更多模板...
+            }
+            
+            selectedFurniture = null;
+            drawRoom();
+            updateCurrentFurnitureList();
+            updateCalculations();
+        }
+        
+        // 清空画布
+        function clearCanvas() {
+            if(confirm('确定要清空所有家具吗？')) {
+                furnitureItems = [];
+                selectedFurniture = null;
+                drawRoom();
+                updateCurrentFurnitureList();
+                updateCalculations();
+            }
+        }
+        
+        // 保存布局
+        function saveLayout() {
+            const layout = {
+                room: room,
+                furniture: furnitureItems,
+                doorsWindows: doorsWindows,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('furnitureLayout', JSON.stringify(layout));
+            alert('布局已保存到本地存储！');
+        }
+        
+        // 加载布局
+        function loadLayout() {
+            const saved = localStorage.getItem('furnitureLayout');
+            if(saved) {
+                try {
+                    const layout = JSON.parse(saved);
+                    room = layout.room;
+                    furnitureItems = layout.furniture || [];
+                    doorsWindows = layout.doorsWindows || [];
+                    
+                    // 更新表单
+                    document.getElementById('roomLength').value = room.length;
+                    document.getElementById('roomWidth').value = room.width;
+                    document.getElementById('roomHeight').value = room.height;
+                    
+                    // 隐藏覆盖层
+                    document.getElementById('canvasOverlay').style.display = 'none';
+                    document.getElementById('currentFurnitureCard').style.display = 'block';
+                    
+                    selectedFurniture = null;
+                    drawRoom();
+                    updateCurrentFurnitureList();
+                    updateCalculations();
+                    updateDoorWindowList();
+                    
+                    alert('布局已加载！');
+                } catch(e) {
+                    alert('加载布局失败：' + e.message);
+                }
+            } else {
+                alert('没有找到保存的布局！');
+            }
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if(savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                if(themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+                
+                // 重绘画布以适应新主题
+                drawRoom();
+            }
+            
+            if(themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+    </script>
+    
+    <style>
+        /* 家具摆放计算器专属样式 */
+        .furniture-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 1024px) {
+            .furniture-layout {
+                flex-direction: row;
+            }
+            
+            .furniture-sidebar {
+                flex: 0 0 20rem;
+            }
+            
+            .furniture-main {
+                flex: 1 1 0%;
+            }
+        }
+        
+        .door-window-setup {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .door-window-list {
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .door-window-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .dw-icon {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-light);
+            border-radius: var(--radius);
+            margin-right: 0.75rem;
+            color: var(--primary);
+        }
+        
+        .dw-info {
+            flex: 1;
+        }
+        
+        .furniture-categories {
+            margin-bottom: 1rem;
+        }
+        
+        .furniture-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .furniture-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            cursor: move;
+            transition: all var(--transition);
+        }
+        
+        .furniture-item:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .furniture-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius);
+            margin-right: 0.75rem;
+        }
+        
+        .furniture-info {
+            flex: 1;
+        }
+        
+        .furniture-info small {
+            display: block;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+        }
+        
+        .current-furniture-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .current-furniture-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+        
+        .current-furniture-item.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .current-furniture-item:hover {
+            border-color: var(--primary);
+        }
+        
+        .cf-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: var(--radius);
+            margin-right: 0.75rem;
+        }
+        
+        .cf-info {
+            flex: 1;
+        }
+        
+        .cf-info small {
+            display: block;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .cf-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .canvas-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .canvas-container {
+            position: relative;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background-color: var(--bg-secondary);
+        }
+        
+        #roomCanvas {
+            display: block;
+            width: 100%;
+            height: 500px;
+            background-color: var(--bg-primary);
+        }
+        
+        .canvas-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(var(--bg-primary-rgb), 0.9);
+            color: var(--text-secondary);
+        }
+        
+        .canvas-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+        }
+        
+        .tool-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tool-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .scale-info {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+        
+        .space-analysis, .layout-suggestions, .budget-estimate {
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+        }
+        
+        .suggestion-item i {
+            margin-top: 0.125rem;
+        }
+        
+        .layout-templates {
+            margin-top: 1rem;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .template-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .template-card {
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .template-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        .template-preview {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-secondary);
+        }
+        
+        .template-shape {
+            width: 50px;
+            height: 40px;
+            border-radius: 4px;
+        }
+        
+        .template-info {
+            padding: 0.75rem;
+            background-color: var(--bg-primary);
+        }
+        
+        .template-info h5 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .template-info p {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0;
+        }
+        
+        .reference-card {
+            padding: 1.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .input-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</body>
+</html>
