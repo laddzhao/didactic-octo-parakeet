@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠券计算 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">优惠券计算</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">优惠券计算</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">优惠券计算</h1>
+                            <p class="calculator-description">
+                                计算多张优惠券的最佳使用方案，最大化节省金额。
+                            </p>
+                        </div>
+                        
+                        <!-- 优惠券类型选择 -->
+                        <div class="tabs" id="couponTabs">
+                            <button class="tab active" data-type="single">单张优惠券</button>
+                            <button class="tab" data-type="multiple">多张优惠券</button>
+                        </div>
+                        
+                        <!-- 基础信息 -->
+                        <div class="input-group">
+                            <label class="input-label">消费总金额 (元)</label>
+                            <input type="number" id="totalAmount" class="input-field" placeholder="例如：200" value="200">
+                        </div>
+                        
+                        <!-- 单张优惠券部分 -->
+                        <div id="singleSection">
+                            <div class="input-group">
+                                <label class="input-label">优惠券类型</label>
+                                <select id="couponType" class="input-field">
+                                    <option value="discount">折扣券</option>
+                                    <option value="fullDiscount">满减券</option>
+                                    <option value="fixed">固定金额券</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 折扣券选项 -->
+                            <div id="discountOptions">
+                                <div class="input-group">
+                                    <label class="input-label">折扣比例 (%)</label>
+                                    <input type="number" id="discountRate" class="input-field" placeholder="例如：20" value="20" step="0.1">
+                                </div>
+                            </div>
+                            
+                            <!-- 满减券选项 -->
+                            <div id="fullDiscountOptions" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">满减条件 (满X元)</label>
+                                    <input type="number" id="fullCondition" class="input-field" placeholder="例如：100" value="100">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label class="input-label">减免金额 (减Y元)</label>
+                                    <input type="number" id="discountAmount" class="input-field" placeholder="例如：20" value="20">
+                                </div>
+                            </div>
+                            
+                            <!-- 固定金额券选项 -->
+                            <div id="fixedOptions" style="display: none;">
+                                <div class="input-group">
+                                    <label class="input-label">优惠金额 (元)</label>
+                                    <input type="number" id="fixedAmount" class="input-field" placeholder="例如：30" value="30">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 多张优惠券部分 -->
+                        <div id="multipleSection" style="display: none;">
+                            <div class="coupon-list" id="couponList">
+                                <!-- 优惠券列表将动态生成 -->
+                                <div class="coupon-item" data-index="0">
+                                    <div class="coupon-item-header">
+                                        <span>优惠券 #1</span>
+                                        <button type="button" class="remove-coupon" data-index="0">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="coupon-item-body">
+                                        <div class="input-group">
+                                            <label class="input-label">类型</label>
+                                            <select class="coupon-type" data-index="0">
+                                                <option value="discount">折扣券</option>
+                                                <option value="fullDiscount">满减券</option>
+                                                <option value="fixed">固定金额券</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="coupon-options" data-index="0">
+                                            <!-- 优惠券选项将动态生成 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="btn btn-outline btn-block" id="addCouponBtn">
+                                <i class="fas fa-plus"></i> 添加优惠券
+                            </button>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算优惠
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 优惠计算结果</h3>
+                            
+                            <div id="couponResult">
+                                <!-- 单张优惠券结果 -->
+                                <div id="singleResult">
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">消费总金额</span>
+                                            <span class="result-value" id="resultTotalAmount">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">优惠券类型</span>
+                                            <span class="result-value" id="resultCouponType">折扣券</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">优惠金额</span>
+                                            <span class="result-value" id="resultDiscountAmount">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">实际支付</span>
+                                            <span class="result-value" id="resultFinalAmount">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">节省比例</span>
+                                            <span class="result-value" id="resultSaveRate">0.00%</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 优惠提示 -->
+                                    <div style="margin-top: 1.5rem;">
+                                        <h4 class="result-title" style="font-size: 1rem;">优惠提示</h4>
+                                        <div class="result-grid">
+                                            <div class="result-item">
+                                                <span class="result-label">是否可用</span>
+                                                <span class="result-value" id="resultUsable">可用</span>
+                                            </div>
+                                            <div class="result-item">
+                                                <span class="result-label">还需凑单</span>
+                                                <span class="result-value" id="resultNeedMore">0.00 元</span>
+                                            </div>
+                                            <div class="result-item">
+                                                <span class="result-label">建议</span>
+                                                <span class="result-value" id="resultSuggestion">建议使用</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 多张优惠券结果 -->
+                                <div id="multipleResult" style="display: none;">
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">消费总金额</span>
+                                            <span class="result-value" id="resultMultipleTotal">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">优惠券数量</span>
+                                            <span class="result-value" id="resultCouponCount">0 张</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">总优惠金额</span>
+                                            <span class="result-value" id="resultTotalDiscount">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">实际支付</span>
+                                            <span class="result-value" id="resultMultipleFinal">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">节省比例</span>
+                                            <span class="result-value" id="resultMultipleSaveRate">0.00%</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 优惠券使用明细 -->
+                                    <div style="margin-top: 1.5rem;">
+                                        <h4 class="result-title" style="font-size: 1rem;">优惠券使用明细</h4>
+                                        <div class="coupon-details" id="couponDetails">
+                                            <!-- 优惠券明细将动态生成 -->
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 最优方案建议 -->
+                                    <div style="margin-top: 1.5rem;">
+                                        <h4 class="result-title" style="font-size: 1rem;">最优方案建议</h4>
+                                        <div class="result-grid">
+                                            <div class="result-item">
+                                                <span class="result-label">建议组合</span>
+                                                <span class="result-value" id="resultBestCombination">无</span>
+                                            </div>
+                                            <div class="result-item">
+                                                <span class="result-label">最大节省</span>
+                                                <span class="result-value" id="resultMaxSave">0.00 元</span>
+                                            </div>
+                                            <div class="result-item">
+                                                <span class="result-label">推荐理由</span>
+                                                <span class="result-value" id="resultReason">无</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 优惠券使用技巧 -->
+                    <div class="coupon-tips mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-lightbulb"></i> 优惠券使用技巧
+                        </h3>
+                        <div class="tips-grid">
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-sort-amount-down"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>优先级排序</h4>
+                                    <p>先使用折扣券，再使用满减券，最后使用固定金额券</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>计算最优组合</h4>
+                                    <p>多张优惠券时，计算不同组合的节省金额</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>注意有效期</h4>
+                                    <p>优先使用即将过期的优惠券</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>叠加规则</h4>
+                                    <p>了解商家优惠券叠加使用规则</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>单张优惠券</strong>：计算单张优惠券的优惠效果</li>
+                                    <li><strong>多张优惠券</strong>：添加多张优惠券，系统会计算最优使用方案</li>
+                                    <li><strong>优惠券类型</strong>：支持折扣券、满减券、固定金额券</li>
+                                    <li><strong>自动计算</strong>：每次输入后自动计算最优优惠方案</li>
+                                    <li><strong>使用建议</strong>：系统会根据计算结果提供使用建议</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="member-discount.html" class="footer-link">会员折扣计算</a>
+                    <a href="coupon.html" class="footer-link">优惠券计算</a>
+                    <a href="installment.html" class="footer-link">分期付款计算</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 优惠券计算</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 优惠券类型切换（单张）
+        document.getElementById('couponType').addEventListener('change', function() {
+            const type = this.value;
+            
+            // 显示对应的选项
+            document.getElementById('discountOptions').style.display = type === 'discount' ? 'block' : 'none';
+            document.getElementById('fullDiscountOptions').style.display = type === 'fullDiscount' ? 'block' : 'none';
+            document.getElementById('fixedOptions').style.display = type === 'fixed' ? 'block' : 'none';
+            
+            calculateCoupon();
+        });
+        
+        // 标签页切换
+        document.querySelectorAll('#couponTabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('#couponTabs .tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                // 显示对应的内容区域
+                document.getElementById('singleSection').style.display = type === 'single' ? 'block' : 'none';
+                document.getElementById('multipleSection').style.display = type === 'multiple' ? 'block' : 'none';
+                
+                // 显示对应的结果区域
+                document.getElementById('singleResult').style.display = type === 'single' ? 'block' : 'none';
+                document.getElementById('multipleResult').style.display = type === 'multiple' ? 'block' : 'none';
+                
+                // 重新计算
+                setTimeout(() => {
+                    calculateCoupon();
+                }, 100);
+            });
+        });
+        
+        // 添加优惠券按钮
+        let couponCount = 1;
+        document.getElementById('addCouponBtn').addEventListener('click', function() {
+            couponCount++;
+            
+            const couponList = document.getElementById('couponList');
+            const newCoupon = document.createElement('div');
+            newCoupon.className = 'coupon-item';
+            newCoupon.dataset.index = couponCount - 1;
+            newCoupon.innerHTML = `
+                <div class="coupon-item-header">
+                    <span>优惠券 #${couponCount}</span>
+                    <button type="button" class="remove-coupon" data-index="${couponCount - 1}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="coupon-item-body">
+                    <div class="input-group">
+                        <label class="input-label">类型</label>
+                        <select class="coupon-type" data-index="${couponCount - 1}">
+                            <option value="discount">折扣券</option>
+                            <option value="fullDiscount">满减券</option>
+                            <option value="fixed">固定金额券</option>
+                        </select>
+                    </div>
+                    
+                    <div class="coupon-options" data-index="${couponCount - 1}">
+                        <!-- 优惠券选项将动态生成 -->
+                    </div>
+                </div>
+            `;
+            
+            couponList.appendChild(newCoupon);
+            
+            // 初始化新优惠券的选项
+            updateCouponOptions(couponCount - 1);
+            
+            // 添加事件监听
+            const newSelect = newCoupon.querySelector('.coupon-type');
+            newSelect.addEventListener('change', function() {
+                const index = this.dataset.index;
+                updateCouponOptions(index);
+                calculateCoupon();
+            });
+            
+            // 添加删除按钮事件
+            const removeBtn = newCoupon.querySelector('.remove-coupon');
+            removeBtn.addEventListener('click', function() {
+                const index = this.dataset.index;
+                removeCoupon(index);
+            });
+            
+            // 重新计算
+            calculateCoupon();
+        });
+        
+        // 初始化第一个优惠券的选项
+        updateCouponOptions(0);
+        
+        // 为第一个优惠券的类型选择添加事件
+        document.querySelector('.coupon-type[data-index="0"]').addEventListener('change', function() {
+            updateCouponOptions(0);
+            calculateCoupon();
+        });
+        
+        // 为第一个删除按钮添加事件
+        document.querySelector('.remove-coupon[data-index="0"]').addEventListener('click', function() {
+            const index = this.dataset.index;
+            removeCoupon(index);
+        });
+        
+        // 更新优惠券选项
+        function updateCouponOptions(index) {
+            const container = document.querySelector(`.coupon-options[data-index="${index}"]`);
+            const type = document.querySelector(`.coupon-type[data-index="${index}"]`).value;
+            
+            let html = '';
+            
+            if (type === 'discount') {
+                html = `
+                    <div class="input-group">
+                        <label class="input-label">折扣比例 (%)</label>
+                        <input type="number" class="discount-rate" data-index="${index}" placeholder="例如：20" value="20" step="0.1">
+                    </div>
+                `;
+            } else if (type === 'fullDiscount') {
+                html = `
+                    <div class="input-group">
+                        <label class="input-label">满减条件 (满X元)</label>
+                        <input type="number" class="full-condition" data-index="${index}" placeholder="例如：100" value="100">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">减免金额 (减Y元)</label>
+                        <input type="number" class="discount-amount" data-index="${index}" placeholder="例如：20" value="20">
+                    </div>
+                `;
+            } else if (type === 'fixed') {
+                html = `
+                    <div class="input-group">
+                        <label class="input-label">优惠金额 (元)</label>
+                        <input type="number" class="fixed-amount" data-index="${index}" placeholder="例如：30" value="30">
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // 为输入框添加事件监听
+            container.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calculateCoupon);
+            });
+        }
+        
+        // 删除优惠券
+        function removeCoupon(index) {
+            const couponItem = document.querySelector(`.coupon-item[data-index="${index}"]`);
+            if (couponItem) {
+                couponItem.remove();
+                
+                // 重新编号剩余的优惠券
+                const remainingItems = document.querySelectorAll('.coupon-item');
+                remainingItems.forEach((item, i) => {
+                    item.dataset.index = i;
+                    item.querySelector('.coupon-item-header span').textContent = `优惠券 #${i + 1}`;
+                    item.querySelector('.coupon-type').dataset.index = i;
+                    item.querySelector('.coupon-options').dataset.index = i;
+                    item.querySelector('.remove-coupon').dataset.index = i;
+                });
+                
+                couponCount = remainingItems.length;
+                
+                // 重新计算
+                calculateCoupon();
+            }
+        }
+        
+        // 输入框变化时自动计算
+        document.querySelectorAll('#totalAmount, #discountRate, #fullCondition, #discountAmount, #fixedAmount').forEach(input => {
+            input.addEventListener('input', calculateCoupon);
+        });
+        
+        // 计算优惠券
+        function calculateCoupon() {
+            const activeTab = document.querySelector('#couponTabs .tab.active').dataset.type;
+            const totalAmount = parseFloat(document.getElementById('totalAmount').value) || 0;
+            
+            if (activeTab === 'single') {
+                calculateSingleCoupon(totalAmount);
+            } else {
+                calculateMultipleCoupons(totalAmount);
+            }
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 计算单张优惠券
+        function calculateSingleCoupon(totalAmount) {
+            const type = document.getElementById('couponType').value;
+            let discountAmount = 0;
+            let finalAmount = totalAmount;
+            let usable = true;
+            let needMore = 0;
+            let suggestion = '建议使用';
+            
+            if (type === 'discount') {
+                const discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
+                discountAmount = totalAmount * (discountRate / 100);
+                finalAmount = totalAmount - discountAmount;
+            } else if (type === 'fullDiscount') {
+                const fullCondition = parseFloat(document.getElementById('fullCondition').value) || 0;
+                const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+                
+                if (totalAmount >= fullCondition) {
+                    discountAmount = discount;
+                    finalAmount = totalAmount - discount;
+                } else {
+                    discountAmount = 0;
+                    finalAmount = totalAmount;
+                    usable = false;
+                    needMore = fullCondition - totalAmount;
+                    suggestion = '未达门槛';
+                }
+            } else if (type === 'fixed') {
+                const fixedAmount = parseFloat(document.getElementById('fixedAmount').value) || 0;
+                discountAmount = Math.min(fixedAmount, totalAmount);
+                finalAmount = totalAmount - discountAmount;
+            }
+            
+            // 计算节省比例
+            const saveRate = totalAmount > 0 ? (discountAmount / totalAmount * 100) : 0;
+            
+            // 显示结果
+            document.getElementById('resultTotalAmount').textContent = totalAmount.toFixed(2) + ' 元';
+            document.getElementById('resultCouponType').textContent = 
+                type === 'discount' ? '折扣券' : 
+                type === 'fullDiscount' ? '满减券' : '固定金额券';
+            document.getElementById('resultDiscountAmount').textContent = discountAmount.toFixed(2) + ' 元';
+            document.getElementById('resultFinalAmount').textContent = finalAmount.toFixed(2) + ' 元';
+            document.getElementById('resultSaveRate').textContent = saveRate.toFixed(2) + '%';
+            
+            document.getElementById('resultUsable').textContent = usable ? '可用' : '不可用';
+            document.getElementById('resultUsable').style.color = usable ? 'var(--success)' : 'var(--danger)';
+            document.getElementById('resultNeedMore').textContent = needMore.toFixed(2) + ' 元';
+            document.getElementById('resultSuggestion').textContent = suggestion;
+        }
+        
+        // 计算多张优惠券
+        function calculateMultipleCoupons(totalAmount) {
+            const couponItems = document.querySelectorAll('.coupon-item');
+            const coupons = [];
+            
+            // 收集所有优惠券信息
+            couponItems.forEach(item => {
+                const index = item.dataset.index;
+                const type = document.querySelector(`.coupon-type[data-index="${index}"]`).value;
+                
+                let coupon = { type: type };
+                
+                if (type === 'discount') {
+                    const rate = parseFloat(document.querySelector(`.discount-rate[data-index="${index}"]`)?.value) || 0;
+                    coupon.rate = rate;
+                } else if (type === 'fullDiscount') {
+                    const condition = parseFloat(document.querySelector(`.full-condition[data-index="${index}"]`)?.value) || 0;
+                    const amount = parseFloat(document.querySelector(`.discount-amount[data-index="${index}"]`)?.value) || 0;
+                    coupon.condition = condition;
+                    coupon.amount = amount;
+                } else if (type === 'fixed') {
+                    const fixedAmount = parseFloat(document.querySelector(`.fixed-amount[data-index="${index}"]`)?.value) || 0;
+                    coupon.amount = fixedAmount;
+                }
+                
+                coupons.push(coupon);
+            });
+            
+            // 计算最优方案（简单算法：按折扣力度排序）
+            let remainingAmount = totalAmount;
+            let totalDiscount = 0;
+            let couponDetails = [];
+            
+            // 优先使用折扣券
+            const discountCoupons = coupons.filter(c => c.type === 'discount');
+            discountCoupons.forEach(coupon => {
+                const discount = remainingAmount * (coupon.rate / 100);
+                totalDiscount += discount;
+                remainingAmount -= discount;
+                couponDetails.push({
+                    type: '折扣券',
+                    discount: discount.toFixed(2) + ' 元',
+                    rate: coupon.rate + '%'
+                });
+            });
+            
+            // 然后使用满减券
+            const fullDiscountCoupons = coupons.filter(c => c.type === 'fullDiscount');
+            fullDiscountCoupons.forEach(coupon => {
+                if (remainingAmount >= coupon.condition) {
+                    totalDiscount += coupon.amount;
+                    remainingAmount -= coupon.amount;
+                    couponDetails.push({
+                        type: '满减券',
+                        discount: coupon.amount.toFixed(2) + ' 元',
+                        condition: '满' + coupon.condition + '元'
+                    });
+                }
+            });
+            
+            // 最后使用固定金额券
+            const fixedCoupons = coupons.filter(c => c.type === 'fixed');
+            fixedCoupons.forEach(coupon => {
+                const discount = Math.min(coupon.amount, remainingAmount);
+                totalDiscount += discount;
+                remainingAmount -= discount;
+                couponDetails.push({
+                    type: '固定金额券',
+                    discount: discount.toFixed(2) + ' 元'
+                });
+            });
+            
+            const finalAmount = totalAmount - totalDiscount;
+            const saveRate = totalAmount > 0 ? (totalDiscount / totalAmount * 100) : 0;
+            
+            // 显示结果
+            document.getElementById('resultMultipleTotal').textContent = totalAmount.toFixed(2) + ' 元';
+            document.getElementById('resultCouponCount').textContent = coupons.length + ' 张';
+            document.getElementById('resultTotalDiscount').textContent = totalDiscount.toFixed(2) + ' 元';
+            document.getElementById('resultMultipleFinal').textContent = finalAmount.toFixed(2) + ' 元';
+            document.getElementById('resultMultipleSaveRate').textContent = saveRate.toFixed(2) + '%';
+            
+            // 显示优惠券使用明细
+            const detailsContainer = document.getElementById('couponDetails');
+            detailsContainer.innerHTML = '';
+            
+            couponDetails.forEach(detail => {
+                const detailDiv = document.createElement('div');
+                detailDiv.className = 'coupon-detail-item';
+                
+                let detailText = detail.type;
+                if (detail.rate) detailText += ` (${detail.rate})`;
+                if (detail.condition) detailText += ` ${detail.condition}`;
+                detailText += `: ${detail.discount}`;
+                
+                detailDiv.textContent = detailText;
+                detailsContainer.appendChild(detailDiv);
+            });
+            
+            // 最优方案建议
+            document.getElementById('resultBestCombination').textContent = 
+                discountCoupons.length > 0 ? '优先使用折扣券' : '满减券+固定金额券';
+            document.getElementById('resultMaxSave').textContent = totalDiscount.toFixed(2) + ' 元';
+            document.getElementById('resultReason').textContent = 
+                totalDiscount > 0 ? '此组合可最大化节省金额' : '当前优惠券组合无优惠';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculateCoupon();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .coupon-list {
+            margin-bottom: 1rem;
+        }
+        
+        .coupon-item {
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .coupon-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .coupon-item-header span {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .remove-coupon {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+        }
+        
+        .remove-coupon:hover {
+            background: var(--danger-light);
+        }
+        
+        .coupon-item-body {
+            padding: 1rem;
+        }
+        
+        .coupon-details {
+            margin-top: 0.5rem;
+        }
+        
+        .coupon-detail-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            font-size: 0.875rem;
+        }
+        
+        .coupon-tips {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .tips-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .tip-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .tip-content {
+            flex: 1;
+        }
+        
+        .tip-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .tip-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            .tabs {
+                font-size: 0.875rem;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

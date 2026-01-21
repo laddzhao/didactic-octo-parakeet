@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>折扣计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">折扣计算器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">折扣计算器</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">折扣计算器</h1>
+                            <p class="calculator-description">
+                                计算商品打折后的价格和节省金额，支持百分比折扣和金额折扣两种方式。
+                            </p>
+                        </div>
+                        
+                        <!-- 计算类型选择 -->
+                        <div class="tabs" id="discountTabs">
+                            <button class="tab active" data-type="percentage">百分比折扣</button>
+                            <button class="tab" data-type="amount">金额折扣</button>
+                        </div>
+                        
+                        <!-- 百分比折扣 -->
+                        <div id="percentageSection">
+                            <div class="input-group">
+                                <label class="input-label">商品原价 (元)</label>
+                                <input type="number" id="originalPrice" class="input-field" placeholder="例如：100" value="100">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">折扣百分比 (%)</label>
+                                <input type="number" id="discountPercentage" class="input-field" placeholder="例如：20" value="20" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- 金额折扣 -->
+                        <div id="amountSection" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">商品原价 (元)</label>
+                                <input type="number" id="originalPrice2" class="input-field" placeholder="例如：100" value="100">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">折扣金额 (元)</label>
+                                <input type="number" id="discountAmount" class="input-field" placeholder="例如：20" value="20" step="0.01">
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算折扣
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 计算结果</h3>
+                            
+                            <div id="discountResult">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">商品原价</span>
+                                        <span class="result-value" id="resultOriginalPrice">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">折扣金额</span>
+                                        <span class="result-value" id="resultDiscountAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">折扣后价格</span>
+                                        <span class="result-value" id="resultFinalPrice">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">节省金额</span>
+                                        <span class="result-value" id="resultSavedAmount">0.00 元</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 折扣比例显示 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">折扣信息</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">折扣比例</span>
+                                            <span class="result-value" id="resultDiscountRate">0.00%</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">实际支付比例</span>
+                                            <span class="result-value" id="resultPayRate">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 常见折扣参考 -->
+                    <div class="discount-examples mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-percentage"></i> 常见折扣参考
+                        </h3>
+                        <div class="examples-grid">
+                            <div class="example-item">
+                                <div class="example-percent">9折</div>
+                                <div class="example-content">
+                                    <h4>9折优惠</h4>
+                                    <p>原价100元，折后90元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-percent">8折</div>
+                                <div class="example-content">
+                                    <h4>8折优惠</h4>
+                                    <p>原价100元，折后80元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-percent">7折</div>
+                                <div class="example-content">
+                                    <h4>7折优惠</h4>
+                                    <p>原价100元，折后70元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-percent">5折</div>
+                                <div class="example-content">
+                                    <h4>5折优惠</h4>
+                                    <p>原价100元，折后50元</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>百分比折扣</strong>：输入原价和折扣百分比，如原价100元打8折</li>
+                                    <li><strong>金额折扣</strong>：输入原价和直接减免的金额，如原价100元减20元</li>
+                                    <li><strong>自动计算</strong>：每次输入后自动计算折扣后价格和节省金额</li>
+                                    <li><strong>快速参考</strong>：查看常见折扣示例，了解不同折扣的节省金额</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="full-discount.html" class="footer-link">满减计算器</a>
+                    <a href="price-compare.html" class="footer-link">单价对比器</a>
+                    <a href="tax-calc.html" class="footer-link">税费计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 折扣计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 标签页切换
+        document.querySelectorAll('#discountTabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('#discountTabs .tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                // 显示对应的内容区域
+                document.getElementById('percentageSection').style.display = type === 'percentage' ? 'block' : 'none';
+                document.getElementById('amountSection').style.display = type === 'amount' ? 'block' : 'none';
+                
+                // 重新计算
+                setTimeout(() => {
+                    calculateDiscount();
+                }, 100);
+            });
+        });
+        
+        // 输入框变化时自动计算
+        document.querySelectorAll('#percentageSection input, #amountSection input').forEach(input => {
+            input.addEventListener('input', calculateDiscount);
+        });
+        
+        // 计算折扣
+        function calculateDiscount() {
+            const activeTab = document.querySelector('#discountTabs .tab.active').dataset.type;
+            
+            if (activeTab === 'percentage') {
+                calculatePercentageDiscount();
+            } else if (activeTab === 'amount') {
+                calculateAmountDiscount();
+            }
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 计算百分比折扣
+        function calculatePercentageDiscount() {
+            // 获取输入值
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+            
+            // 计算折扣金额
+            const discountAmount = originalPrice * (discountPercentage / 100);
+            const finalPrice = originalPrice - discountAmount;
+            const savedAmount = discountAmount;
+            
+            // 计算折扣比例
+            const discountRate = discountPercentage;
+            const payRate = 100 - discountPercentage;
+            
+            // 显示结果
+            document.getElementById('resultOriginalPrice').textContent = originalPrice.toFixed(2) + ' 元';
+            document.getElementById('resultDiscountAmount').textContent = discountAmount.toFixed(2) + ' 元';
+            document.getElementById('resultFinalPrice').textContent = finalPrice.toFixed(2) + ' 元';
+            document.getElementById('resultSavedAmount').textContent = savedAmount.toFixed(2) + ' 元';
+            document.getElementById('resultDiscountRate').textContent = discountRate.toFixed(2) + '%';
+            document.getElementById('resultPayRate').textContent = payRate.toFixed(2) + '%';
+        }
+        
+        // 计算金额折扣
+        function calculateAmountDiscount() {
+            // 获取输入值
+            const originalPrice = parseFloat(document.getElementById('originalPrice2').value) || 0;
+            const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+            
+            // 确保折扣金额不超过原价
+            const actualDiscount = Math.min(discountAmount, originalPrice);
+            const finalPrice = originalPrice - actualDiscount;
+            const savedAmount = actualDiscount;
+            
+            // 计算折扣比例
+            const discountRate = (actualDiscount / originalPrice) * 100;
+            const payRate = 100 - discountRate;
+            
+            // 显示结果
+            document.getElementById('resultOriginalPrice').textContent = originalPrice.toFixed(2) + ' 元';
+            document.getElementById('resultDiscountAmount').textContent = actualDiscount.toFixed(2) + ' 元';
+            document.getElementById('resultFinalPrice').textContent = finalPrice.toFixed(2) + ' 元';
+            document.getElementById('resultSavedAmount').textContent = savedAmount.toFixed(2) + ' 元';
+            document.getElementById('resultDiscountRate').textContent = discountRate.toFixed(2) + '%';
+            document.getElementById('resultPayRate').textContent = payRate.toFixed(2) + '%';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculateDiscount();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // 这里简化处理，实际应该打开移动端菜单
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .discount-examples {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .examples-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .example-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .example-percent {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .example-content {
+            flex: 1;
+        }
+        
+        .example-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .example-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            .tabs {
+                font-size: 0.875rem;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

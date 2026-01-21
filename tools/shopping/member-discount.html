@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员折扣计算 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">会员折扣计算</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">会员折扣计算</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">会员折扣计算</h1>
+                            <p class="calculator-description">
+                                计算会员叠加优惠后的价格，评估会员卡是否值得办理。
+                            </p>
+                        </div>
+                        
+                        <!-- 基础信息 -->
+                        <div class="input-group">
+                            <label class="input-label">商品原价 (元)</label>
+                            <input type="number" id="originalPrice" class="input-field" placeholder="例如：100" value="100">
+                        </div>
+                        
+                        <!-- 会员等级选择 -->
+                        <div class="input-group">
+                            <label class="input-label">会员等级</label>
+                            <select id="memberLevel" class="input-field">
+                                <option value="0">非会员 (无折扣)</option>
+                                <option value="5">普通会员 (9.5折)</option>
+                                <option value="10" selected>银卡会员 (9折)</option>
+                                <option value="15">金卡会员 (8.5折)</option>
+                                <option value="20">白金会员 (8折)</option>
+                                <option value="25">钻石会员 (7.5折)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 会员日折扣 -->
+                        <div class="input-group">
+                            <label class="input-label">会员日额外折扣</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="memberDayToggle">
+                                <label for="memberDayToggle" class="toggle-slider"></label>
+                                <span class="toggle-label">启用会员日优惠</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 会员日折扣选项 -->
+                        <div id="memberDayOptions" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">会员日折扣 (%)</label>
+                                <input type="number" id="memberDayDiscount" class="input-field" placeholder="例如：5" value="5" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- 积分抵扣 -->
+                        <div class="input-group">
+                            <label class="input-label">使用积分抵扣</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="pointsToggle">
+                                <label for="pointsToggle" class="toggle-slider"></label>
+                                <span class="toggle-label">启用积分抵扣</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 积分抵扣选项 -->
+                        <div id="pointsOptions" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">可用积分</label>
+                                <input type="number" id="availablePoints" class="input-field" placeholder="例如：1000" value="1000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">积分兑换比例</label>
+                                <select id="pointsRatio" class="input-field">
+                                    <option value="100">100积分=1元</option>
+                                    <option value="50">50积分=1元</option>
+                                    <option value="20">20积分=1元</option>
+                                    <option value="10">10积分=1元</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算会员折扣
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 会员折扣结果</h3>
+                            
+                            <div id="memberDiscountResult">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">商品原价</span>
+                                        <span class="result-value" id="resultOriginalPrice">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">会员等级折扣</span>
+                                        <span class="result-value" id="resultMemberDiscount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">会员日折扣</span>
+                                        <span class="result-value" id="resultMemberDayDiscount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">积分抵扣</span>
+                                        <span class="result-value" id="resultPointsDiscount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">最终支付</span>
+                                        <span class="result-value" id="resultFinalPrice">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">总节省金额</span>
+                                        <span class="result-value" id="resultTotalSaved">0.00 元</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 折扣分析 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">折扣分析</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">总折扣率</span>
+                                            <span class="result-value" id="resultTotalDiscountRate">0.00%</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">会员等级</span>
+                                            <span class="result-value" id="resultMemberLevel">非会员</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">会员日优惠</span>
+                                            <span class="result-value" id="resultMemberDayStatus">未启用</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">积分使用</span>
+                                            <span class="result-value" id="resultPointsUsed">0 积分</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 会员价值评估 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">会员价值评估</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">单次节省</span>
+                                            <span class="result-value" id="resultSingleSave">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">月消费10次</span>
+                                            <span class="result-value" id="resultMonthSave">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">年消费120次</span>
+                                            <span class="result-value" id="resultYearSave">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">办卡是否划算</span>
+                                            <span class="result-value" id="resultCardWorth">待评估</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 会员等级说明 -->
+                    <div class="member-levels mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-crown"></i> 会员等级说明
+                        </h3>
+                        <div class="levels-grid">
+                            <div class="level-item">
+                                <div class="level-icon bronze">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="level-content">
+                                    <h4>普通会员</h4>
+                                    <p>9.5折优惠</p>
+                                    <p class="level-desc">消费满100元自动升级</p>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="level-icon silver">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                                <div class="level-content">
+                                    <h4>银卡会员</h4>
+                                    <p>9折优惠</p>
+                                    <p class="level-desc">消费满500元升级</p>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="level-icon gold">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="level-content">
+                                    <h4>金卡会员</h4>
+                                    <p>8.5折优惠</p>
+                                    <p class="level-desc">消费满2000元升级</p>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="level-icon platinum">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <div class="level-content">
+                                    <h4>白金会员</h4>
+                                    <p>8折优惠</p>
+                                    <p class="level-desc">消费满5000元升级</p>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="level-icon diamond">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <div class="level-content">
+                                    <h4>钻石会员</h4>
+                                    <p>7.5折优惠</p>
+                                    <p class="level-desc">消费满10000元升级</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>选择会员等级</strong>：根据您的会员卡等级选择相应的折扣</li>
+                                    <li><strong>会员日优惠</strong>：部分商家在特定日期提供额外折扣</li>
+                                    <li><strong>积分抵扣</strong>：使用积分兑换现金抵扣，提高优惠力度</li>
+                                    <li><strong>价值评估</strong>：系统会评估会员卡是否值得办理或升级</li>
+                                    <li><strong>自动计算</strong>：每次输入后自动计算最终价格和节省金额</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="full-discount.html" class="footer-link">满减计算器</a>
+                    <a href="tax-calc.html" class="footer-link">税费计算器</a>
+                    <a href="member-discount.html" class="footer-link">会员折扣计算</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 会员折扣计算</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 会员日折扣切换
+        document.getElementById('memberDayToggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('memberDayOptions').style.display = 'block';
+            } else {
+                document.getElementById('memberDayOptions').style.display = 'none';
+            }
+            calculateMemberDiscount();
+        });
+        
+        // 积分抵扣切换
+        document.getElementById('pointsToggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('pointsOptions').style.display = 'block';
+            } else {
+                document.getElementById('pointsOptions').style.display = 'none';
+            }
+            calculateMemberDiscount();
+        });
+        
+        // 输入框变化时自动计算
+        document.querySelectorAll('#originalPrice, #memberDayDiscount, #availablePoints').forEach(input => {
+            input.addEventListener('input', calculateMemberDiscount);
+        });
+        
+        // 下拉框变化时自动计算
+        document.getElementById('memberLevel').addEventListener('change', calculateMemberDiscount);
+        document.getElementById('pointsRatio').addEventListener('change', calculateMemberDiscount);
+        
+        // 计算会员折扣
+        function calculateMemberDiscount() {
+            // 获取输入值
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+            const memberLevel = parseInt(document.getElementById('memberLevel').value) || 0;
+            const hasMemberDay = document.getElementById('memberDayToggle').checked;
+            const memberDayDiscount = hasMemberDay ? (parseFloat(document.getElementById('memberDayDiscount').value) || 0) : 0;
+            const hasPoints = document.getElementById('pointsToggle').checked;
+            const availablePoints = hasPoints ? (parseFloat(document.getElementById('availablePoints').value) || 0) : 0;
+            const pointsRatio = parseInt(document.getElementById('pointsRatio').value) || 100;
+            
+            // 计算会员等级折扣
+            const memberDiscountAmount = originalPrice * (memberLevel / 100);
+            const priceAfterMemberDiscount = originalPrice - memberDiscountAmount;
+            
+            // 计算会员日折扣
+            let memberDayDiscountAmount = 0;
+            let priceAfterMemberDayDiscount = priceAfterMemberDiscount;
+            
+            if (hasMemberDay && memberDayDiscount > 0) {
+                // 会员日折扣是在会员折扣后的价格基础上计算的
+                memberDayDiscountAmount = priceAfterMemberDiscount * (memberDayDiscount / 100);
+                priceAfterMemberDayDiscount = priceAfterMemberDiscount - memberDayDiscountAmount;
+            }
+            
+            // 计算积分抵扣
+            let pointsDiscountAmount = 0;
+            let pointsUsed = 0;
+            let finalPrice = priceAfterMemberDayDiscount;
+            
+            if (hasPoints && availablePoints > 0 && pointsRatio > 0) {
+                // 计算可以抵扣的金额
+                const maxPointsDiscount = priceAfterMemberDayDiscount; // 最多抵扣到0元
+                const pointsValue = availablePoints / pointsRatio; // 积分可兑换的金额
+                pointsDiscountAmount = Math.min(pointsValue, maxPointsDiscount);
+                finalPrice = priceAfterMemberDayDiscount - pointsDiscountAmount;
+                if (finalPrice < 0) finalPrice = 0;
+                
+                // 计算实际使用的积分
+                pointsUsed = Math.ceil(pointsDiscountAmount * pointsRatio);
+            }
+            
+            // 计算总节省金额
+            const totalSaved = originalPrice - finalPrice;
+            
+            // 计算总折扣率
+            const totalDiscountRate = originalPrice > 0 ? (totalSaved / originalPrice * 100) : 0;
+            
+            // 获取会员等级名称
+            const memberLevelNames = {
+                '0': '非会员',
+                '5': '普通会员',
+                '10': '银卡会员',
+                '15': '金卡会员',
+                '20': '白金会员',
+                '25': '钻石会员'
+            };
+            
+            // 显示结果
+            document.getElementById('resultOriginalPrice').textContent = originalPrice.toFixed(2) + ' 元';
+            document.getElementById('resultMemberDiscount').textContent = memberDiscountAmount.toFixed(2) + ' 元';
+            document.getElementById('resultMemberDayDiscount').textContent = memberDayDiscountAmount.toFixed(2) + ' 元';
+            document.getElementById('resultPointsDiscount').textContent = pointsDiscountAmount.toFixed(2) + ' 元';
+            document.getElementById('resultFinalPrice').textContent = finalPrice.toFixed(2) + ' 元';
+            document.getElementById('resultTotalSaved').textContent = totalSaved.toFixed(2) + ' 元';
+            
+            document.getElementById('resultTotalDiscountRate').textContent = totalDiscountRate.toFixed(2) + '%';
+            document.getElementById('resultMemberLevel').textContent = memberLevelNames[memberLevel.toString()];
+            document.getElementById('resultMemberDayStatus').textContent = hasMemberDay ? '已启用' : '未启用';
+            document.getElementById('resultPointsUsed').textContent = pointsUsed.toFixed(0) + ' 积分';
+            
+            // 会员价值评估
+            document.getElementById('resultSingleSave').textContent = totalSaved.toFixed(2) + ' 元';
+            document.getElementById('resultMonthSave').textContent = (totalSaved * 10).toFixed(2) + ' 元';
+            document.getElementById('resultYearSave').textContent = (totalSaved * 120).toFixed(2) + ' 元';
+            
+            // 办卡是否划算评估（简单评估：如果年节省大于100元则认为划算）
+            const cardWorth = (totalSaved * 120) > 100 ? '划算' : '不划算';
+            document.getElementById('resultCardWorth').textContent = cardWorth;
+            document.getElementById('resultCardWorth').style.color = cardWorth === '划算' ? 'var(--success)' : 'var(--danger)';
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculateMemberDiscount();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .toggle-switch input[type="checkbox"] {
+            display: none;
+        }
+        
+        .toggle-slider {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+            background-color: var(--gray-300);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: background-color var(--transition);
+        }
+        
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            left: 0.125rem;
+            top: 0.125rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform var(--transition);
+        }
+        
+        .toggle-switch input[type="checkbox"]:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        .toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
+            transform: translateX(1.5rem);
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .member-levels {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .levels-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        
+        .level-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+        
+        .level-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .level-icon.bronze {
+            background: linear-gradient(135deg, #cd7f32 0%, #a0522d 100%);
+        }
+        
+        .level-icon.silver {
+            background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
+        }
+        
+        .level-icon.gold {
+            background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+        }
+        
+        .level-icon.platinum {
+            background: linear-gradient(135deg, #e5e4e2 0%, #c0c0c0 100%);
+        }
+        
+        .level-icon.diamond {
+            background: linear-gradient(135deg, #b9f2ff 0%, #89cff0 100%);
+        }
+        
+        .level-content {
+            flex: 1;
+        }
+        
+        .level-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .level-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .level-desc {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        @media (max-width: 640px) {
+            .levels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

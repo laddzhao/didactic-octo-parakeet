@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单价对比器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">单价对比器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">单价对比器</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">单价对比器</h1>
+                            <p class="calculator-description">
+                                比较不同包装商品的单位价格，帮您找到最划算的选择。
+                            </p>
+                        </div>
+                        
+                        <!-- 单位选择 -->
+                        <div class="input-group">
+                            <label class="input-label">计算单位</label>
+                            <select id="unitType" class="input-field">
+                                <option value="weight">重量 (克/千克)</option>
+                                <option value="volume">体积 (毫升/升)</option>
+                                <option value="length">长度 (米)</option>
+                                <option value="count">数量 (个/件)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 商品A信息 -->
+                        <div class="comparison-section">
+                            <h3 class="section-subtitle">商品A</h3>
+                            <div class="input-group">
+                                <label class="input-label">商品A价格 (元)</label>
+                                <input type="number" id="priceA" class="input-field" placeholder="例如：10" value="10">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">商品A数量</label>
+                                <input type="number" id="quantityA" class="input-field" placeholder="例如：500" value="500">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">商品A单位</label>
+                                <select id="unitA" class="input-field">
+                                    <option value="g">克 (g)</option>
+                                    <option value="kg">千克 (kg)</option>
+                                    <option value="ml">毫升 (ml)</option>
+                                    <option value="l">升 (L)</option>
+                                    <option value="m">米 (m)</option>
+                                    <option value="piece">个</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 商品B信息 -->
+                        <div class="comparison-section">
+                            <h3 class="section-subtitle">商品B</h3>
+                            <div class="input-group">
+                                <label class="input-label">商品B价格 (元)</label>
+                                <input type="number" id="priceB" class="input-field" placeholder="例如：15" value="15">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">商品B数量</label>
+                                <input type="number" id="quantityB" class="input-field" placeholder="例如：1000" value="1000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">商品B单位</label>
+                                <select id="unitB" class="input-field">
+                                    <option value="g">克 (g)</option>
+                                    <option value="kg">千克 (kg)</option>
+                                    <option value="ml">毫升 (ml)</option>
+                                    <option value="l">升 (L)</option>
+                                    <option value="m">米 (m)</option>
+                                    <option value="piece">个</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-balance-scale"></i> 比较单价
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 单价对比结果</h3>
+                            
+                            <div id="priceCompareResult">
+                                <!-- 单价对比 -->
+                                <div class="comparison-result">
+                                    <div class="comparison-item">
+                                        <div class="comparison-label">商品A单价</div>
+                                        <div class="comparison-value" id="unitPriceA">0.00 元/克</div>
+                                    </div>
+                                    <div class="comparison-item">
+                                        <div class="comparison-label">商品B单价</div>
+                                        <div class="comparison-value" id="unitPriceB">0.00 元/克</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 推荐结果 -->
+                                <div class="recommendation" id="recommendation">
+                                    <div class="recommendation-icon">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <h4>推荐购买</h4>
+                                        <p id="recommendationText">商品A更划算</p>
+                                        <div class="recommendation-detail">
+                                            每克便宜 <span id="priceDifference">0.00</span> 元
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 详细对比 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">详细对比</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">商品A总价</span>
+                                            <span class="result-value" id="totalPriceA">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">商品A总量</span>
+                                            <span class="result-value" id="totalQuantityA">0 克</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">商品B总价</span>
+                                            <span class="result-value" id="totalPriceB">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">商品B总量</span>
+                                            <span class="result-value" id="totalQuantityB">0 克</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 换算对比 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">换算对比</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">商品A相当于</span>
+                                            <span class="result-value" id="equivalentA">0 克商品B</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">商品B相当于</span>
+                                            <span class="result-value" id="equivalentB">0 克商品A</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">价格差异</span>
+                                            <span class="result-value" id="priceDiffPercent">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用技巧 -->
+                    <div class="tips-section mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-lightbulb"></i> 使用技巧
+                        </h3>
+                        <div class="tips-grid">
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-weight"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>统一单位</h4>
+                                    <p>确保两个商品使用相同的单位进行比较</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-sort-amount-down"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>单价越低越划算</h4>
+                                    <p>比较每克/每毫升的价格，数值越小越好</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>自动换算</h4>
+                                    <p>系统会自动将不同单位换算成标准单位</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="tip-content">
+                                    <h4>实际需求</h4>
+                                    <p>考虑实际用量，避免购买过多造成浪费</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>选择计算单位</strong>：重量、体积、长度或数量</li>
+                                    <li><strong>输入商品信息</strong>：分别输入两种商品的价格和数量</li>
+                                    <li><strong>选择单位</strong>：为每种商品选择合适的计量单位</li>
+                                    <li><strong>自动比较</strong>：系统会自动计算并比较单位价格，推荐更划算的商品</li>
+                                    <li><strong>单位换算</strong>：不同单位会自动换算为统一标准进行比较</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="full-discount.html" class="footer-link">满减计算器</a>
+                    <a href="price-compare.html" class="footer-link">单价对比器</a>
+                    <a href="split-bill.html" class="footer-link">分摊计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 单价对比器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 单位类型变化时更新单位选项
+        document.getElementById('unitType').addEventListener('change', function() {
+            const unitType = this.value;
+            const unitA = document.getElementById('unitA');
+            const unitB = document.getElementById('unitB');
+            
+            // 清空选项
+            unitA.innerHTML = '';
+            unitB.innerHTML = '';
+            
+            // 根据单位类型添加选项
+            let options = [];
+            
+            if (unitType === 'weight') {
+                options = [
+                    {value: 'g', text: '克 (g)'},
+                    {value: 'kg', text: '千克 (kg)'}
+                ];
+            } else if (unitType === 'volume') {
+                options = [
+                    {value: 'ml', text: '毫升 (ml)'},
+                    {value: 'l', text: '升 (L)'}
+                ];
+            } else if (unitType === 'length') {
+                options = [
+                    {value: 'm', text: '米 (m)'},
+                    {value: 'cm', text: '厘米 (cm)'},
+                    {value: 'mm', text: '毫米 (mm)'}
+                ];
+            } else if (unitType === 'count') {
+                options = [
+                    {value: 'piece', text: '个'},
+                    {value: 'pack', text: '包'},
+                    {value: 'box', text: '盒'}
+                ];
+            }
+            
+            // 添加选项到两个下拉框
+            options.forEach(option => {
+                const optionA = document.createElement('option');
+                optionA.value = option.value;
+                optionA.textContent = option.text;
+                unitA.appendChild(optionA);
+                
+                const optionB = document.createElement('option');
+                optionB.value = option.value;
+                optionB.textContent = option.text;
+                unitB.appendChild(optionB);
+            });
+            
+            // 重新计算
+            calculatePriceCompare();
+        });
+        
+        // 输入框变化时自动计算
+        document.querySelectorAll('#priceA, #quantityA, #priceB, #quantityB').forEach(input => {
+            input.addEventListener('input', calculatePriceCompare);
+        });
+        
+        // 单位变化时自动计算
+        document.getElementById('unitA').addEventListener('change', calculatePriceCompare);
+        document.getElementById('unitB').addEventListener('change', calculatePriceCompare);
+        
+        // 计算单价对比
+        function calculatePriceCompare() {
+            // 获取输入值
+            const priceA = parseFloat(document.getElementById('priceA').value) || 0;
+            const quantityA = parseFloat(document.getElementById('quantityA').value) || 0;
+            const unitA = document.getElementById('unitA').value;
+            
+            const priceB = parseFloat(document.getElementById('priceB').value) || 0;
+            const quantityB = parseFloat(document.getElementById('quantityB').value) || 0;
+            const unitB = document.getElementById('unitB').value;
+            
+            // 将数量转换为标准单位（克、毫升、米、个）
+            const standardQuantityA = convertToStandard(quantityA, unitA);
+            const standardQuantityB = convertToStandard(quantityB, unitB);
+            
+            // 计算单价（每标准单位的价格）
+            const unitPriceA = standardQuantityA > 0 ? priceA / standardQuantityA : 0;
+            const unitPriceB = standardQuantityB > 0 ? priceB / standardQuantityB : 0;
+            
+            // 获取单位显示文本
+            const unitText = getUnitText(unitA);
+            
+            // 显示结果
+            document.getElementById('unitPriceA').textContent = unitPriceA.toFixed(4) + ' 元/' + unitText;
+            document.getElementById('unitPriceB').textContent = unitPriceB.toFixed(4) + ' 元/' + unitText;
+            document.getElementById('totalPriceA').textContent = priceA.toFixed(2) + ' 元';
+            document.getElementById('totalQuantityA').textContent = standardQuantityA.toFixed(2) + ' ' + unitText;
+            document.getElementById('totalPriceB').textContent = priceB.toFixed(2) + ' 元';
+            document.getElementById('totalQuantityB').textContent = standardQuantityB.toFixed(2) + ' ' + unitText;
+            
+            // 换算对比
+            const equivalentA = standardQuantityA > 0 ? (priceA / unitPriceB) : 0;
+            const equivalentB = standardQuantityB > 0 ? (priceB / unitPriceA) : 0;
+            
+            document.getElementById('equivalentA').textContent = equivalentA.toFixed(2) + ' ' + unitText + '商品B';
+            document.getElementById('equivalentB').textContent = equivalentB.toFixed(2) + ' ' + unitText + '商品A';
+            
+            // 价格差异百分比
+            const priceDiff = Math.abs(unitPriceA - unitPriceB);
+            const priceDiffPercent = unitPriceB > 0 ? (priceDiff / unitPriceB * 100) : 0;
+            document.getElementById('priceDiffPercent').textContent = priceDiffPercent.toFixed(2) + '%';
+            
+            // 推荐结果
+            let recommendationText = '';
+            let priceDifference = 0;
+            
+            if (unitPriceA < unitPriceB) {
+                recommendationText = '商品A更划算';
+                priceDifference = unitPriceB - unitPriceA;
+                document.getElementById('recommendation').style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+                document.getElementById('recommendation').style.borderColor = '#4361ee';
+            } else if (unitPriceB < unitPriceA) {
+                recommendationText = '商品B更划算';
+                priceDifference = unitPriceA - unitPriceB;
+                document.getElementById('recommendation').style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                document.getElementById('recommendation').style.borderColor = '#10b981';
+            } else {
+                recommendationText = '两个商品单价相同';
+                priceDifference = 0;
+                document.getElementById('recommendation').style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+                document.getElementById('recommendation').style.borderColor = '#f59e0b';
+            }
+            
+            document.getElementById('recommendationText').textContent = recommendationText;
+            document.getElementById('priceDifference').textContent = priceDifference.toFixed(4);
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 转换为标准单位
+        function convertToStandard(quantity, unit) {
+            switch(unit) {
+                case 'g': return quantity; // 克
+                case 'kg': return quantity * 1000; // 千克转克
+                case 'ml': return quantity; // 毫升
+                case 'l': return quantity * 1000; // 升转毫升
+                case 'm': return quantity; // 米
+                case 'cm': return quantity / 100; // 厘米转米
+                case 'mm': return quantity / 1000; // 毫米转米
+                case 'piece': return quantity; // 个
+                case 'pack': return quantity; // 包（假设1包=1个）
+                case 'box': return quantity; // 盒（假设1盒=1个）
+                default: return quantity;
+            }
+        }
+        
+        // 获取单位显示文本
+        function getUnitText(unit) {
+            switch(unit) {
+                case 'g': return '克';
+                case 'kg': return '克'; // 统一显示为克
+                case 'ml': return '毫升';
+                case 'l': return '毫升'; // 统一显示为毫升
+                case 'm': case 'cm': case 'mm': return '米';
+                case 'piece': case 'pack': case 'box': return '个';
+                default: return '单位';
+            }
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculatePriceCompare();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .comparison-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+        }
+        
+        .section-subtitle {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .comparison-result {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+        }
+        
+        .comparison-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .recommendation {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .recommendation-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .recommendation-content {
+            flex: 1;
+        }
+        
+        .recommendation-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .recommendation-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .recommendation-detail {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .tips-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .tips-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .tip-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .tip-content {
+            flex: 1;
+        }
+        
+        .tip-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .tip-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            .comparison-result {
+                flex-direction: column;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

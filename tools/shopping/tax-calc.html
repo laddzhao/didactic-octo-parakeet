@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>税费计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">税费计算器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">税费计算器</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">税费计算器</h1>
+                            <p class="calculator-description">
+                                计算商品含税价格和税额，支持不同税率计算。
+                            </p>
+                        </div>
+                        
+                        <!-- 计算方式选择 -->
+                        <div class="tabs" id="taxTabs">
+                            <button class="tab active" data-type="priceWithTax">已知含税价</button>
+                            <button class="tab" data-type="priceWithoutTax">已知不含税价</button>
+                        </div>
+                        
+                        <!-- 已知含税价部分 -->
+                        <div id="priceWithTaxSection">
+                            <div class="input-group">
+                                <label class="input-label">含税价格 (元)</label>
+                                <input type="number" id="priceWithTax" class="input-field" placeholder="例如：100" value="100">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">税率 (%)</label>
+                                <input type="number" id="taxRateWithTax" class="input-field" placeholder="例如：13" value="13" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- 已知不含税价部分 -->
+                        <div id="priceWithoutTaxSection" style="display: none;">
+                            <div class="input-group">
+                                <label class="input-label">不含税价格 (元)</label>
+                                <input type="number" id="priceWithoutTax" class="input-field" placeholder="例如：88.5" value="88.5">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">税率 (%)</label>
+                                <input type="number" id="taxRateWithoutTax" class="input-field" placeholder="例如：13" value="13" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- 税率快速选择 -->
+                        <div class="input-group">
+                            <label class="input-label">常用税率快速选择</label>
+                            <div class="tax-rate-buttons">
+                                <button class="tax-rate-btn" data-rate="3">3%</button>
+                                <button class="tax-rate-btn" data-rate="6">6%</button>
+                                <button class="tax-rate-btn" data-rate="9">9%</button>
+                                <button class="tax-rate-btn" data-rate="13">13%</button>
+                                <button class="tax-rate-btn" data-rate="16">16%</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算税费
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 税费计算结果</h3>
+                            
+                            <div id="taxResult">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">不含税价格</span>
+                                        <span class="result-value" id="resultPriceWithoutTax">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">税额</span>
+                                        <span class="result-value" id="resultTaxAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">含税价格</span>
+                                        <span class="result-value" id="resultPriceWithTax">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">税率</span>
+                                        <span class="result-value" id="resultTaxRate">0.00%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 税率构成分析 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">税率构成分析</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">商品价值占比</span>
+                                            <span class="result-value" id="resultGoodsRatio">0.00%</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">税费占比</span>
+                                            <span class="result-value" id="resultTaxRatio">0.00%</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">税负率</span>
+                                            <span class="result-value" id="resultTaxBurden">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 税价关系 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">税价关系</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">税价系数</span>
+                                            <span class="result-value" id="resultTaxCoefficient">0.00</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">税额倍数</span>
+                                            <span class="result-value" id="resultTaxMultiplier">0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 常见税率参考 -->
+                    <div class="tax-rate-reference mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-percentage"></i> 常见税率参考
+                        </h3>
+                        <div class="tax-rate-grid">
+                            <div class="tax-rate-item">
+                                <div class="tax-rate-percent">3%</div>
+                                <div class="tax-rate-content">
+                                    <h4>小规模纳税人</h4>
+                                    <p>增值税简易征收税率</p>
+                                </div>
+                            </div>
+                            <div class="tax-rate-item">
+                                <div class="tax-rate-percent">6%</div>
+                                <div class="tax-rate-content">
+                                    <h4>现代服务业</h4>
+                                    <p>部分服务业增值税率</p>
+                                </div>
+                            </div>
+                            <div class="tax-rate-item">
+                                <div class="tax-rate-percent">9%</div>
+                                <div class="tax-rate-content">
+                                    <h4>建筑、运输业</h4>
+                                    <p>部分行业增值税率</p>
+                                </div>
+                            </div>
+                            <div class="tax-rate-item">
+                                <div class="tax-rate-percent">13%</div>
+                                <div class="tax-rate-content">
+                                    <h4>一般纳税人</h4>
+                                    <p>常见货物增值税率</p>
+                                </div>
+                            </div>
+                            <div class="tax-rate-item">
+                                <div class="tax-rate-percent">16%</div>
+                                <div class="tax-rate-content">
+                                    <h4>部分商品</h4>
+                                    <p>部分商品增值税率</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>已知含税价</strong>：输入商品标价（含税）和税率，计算不含税价格和税额</li>
+                                    <li><strong>已知不含税价</strong>：输入商品成本价（不含税）和税率，计算含税价格和税额</li>
+                                    <li><strong>快速选择税率</strong>：点击常用税率按钮快速设置税率</li>
+                                    <li><strong>自动计算</strong>：输入完成后自动计算相关价格和税额</li>
+                                    <li><strong>税率参考</strong>：查看常见税率对应的行业和商品</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="full-discount.html" class="footer-link">满减计算器</a>
+                    <a href="split-bill.html" class="footer-link">分摊计算器</a>
+                    <a href="tax-calc.html" class="footer-link">税费计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 税费计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 标签页切换
+        document.querySelectorAll('#taxTabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('#taxTabs .tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                // 显示对应的内容区域
+                document.getElementById('priceWithTaxSection').style.display = type === 'priceWithTax' ? 'block' : 'none';
+                document.getElementById('priceWithoutTaxSection').style.display = type === 'priceWithoutTax' ? 'block' : 'none';
+                
+                // 重新计算
+                setTimeout(() => {
+                    calculateTax();
+                }, 100);
+            });
+        });
+        
+        // 快速税率选择按钮
+        document.querySelectorAll('.tax-rate-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const rate = this.dataset.rate;
+                document.getElementById('taxRateWithTax').value = rate;
+                document.getElementById('taxRateWithoutTax').value = rate;
+                calculateTax();
+            });
+        });
+        
+        // 输入框变化时自动计算
+        document.querySelectorAll('#priceWithTax, #taxRateWithTax, #priceWithoutTax, #taxRateWithoutTax').forEach(input => {
+            input.addEventListener('input', calculateTax);
+        });
+        
+        // 计算税费
+        function calculateTax() {
+            const activeTab = document.querySelector('#taxTabs .tab.active').dataset.type;
+            
+            let priceWithoutTax = 0;
+            let taxAmount = 0;
+            let priceWithTax = 0;
+            let taxRate = 0;
+            
+            if (activeTab === 'priceWithTax') {
+                // 已知含税价
+                priceWithTax = parseFloat(document.getElementById('priceWithTax').value) || 0;
+                taxRate = parseFloat(document.getElementById('taxRateWithTax').value) || 0;
+                
+                // 计算不含税价格和税额
+                priceWithoutTax = priceWithTax / (1 + taxRate / 100);
+                taxAmount = priceWithTax - priceWithoutTax;
+            } else {
+                // 已知不含税价
+                priceWithoutTax = parseFloat(document.getElementById('priceWithoutTax').value) || 0;
+                taxRate = parseFloat(document.getElementById('taxRateWithoutTax').value) || 0;
+                
+                // 计算含税价格和税额
+                taxAmount = priceWithoutTax * (taxRate / 100);
+                priceWithTax = priceWithoutTax + taxAmount;
+            }
+            
+            // 计算比率
+            const goodsRatio = priceWithoutTax > 0 ? (priceWithoutTax / priceWithTax * 100) : 0;
+            const taxRatio = taxAmount > 0 ? (taxAmount / priceWithTax * 100) : 0;
+            const taxBurden = priceWithoutTax > 0 ? (taxAmount / priceWithoutTax * 100) : 0;
+            
+            // 计算税价系数和税额倍数
+            const taxCoefficient = 1 + taxRate / 100;
+            const taxMultiplier = taxRate / 100;
+            
+            // 显示结果
+            document.getElementById('resultPriceWithoutTax').textContent = priceWithoutTax.toFixed(2) + ' 元';
+            document.getElementById('resultTaxAmount').textContent = taxAmount.toFixed(2) + ' 元';
+            document.getElementById('resultPriceWithTax').textContent = priceWithTax.toFixed(2) + ' 元';
+            document.getElementById('resultTaxRate').textContent = taxRate.toFixed(2) + '%';
+            
+            document.getElementById('resultGoodsRatio').textContent = goodsRatio.toFixed(2) + '%';
+            document.getElementById('resultTaxRatio').textContent = taxRatio.toFixed(2) + '%';
+            document.getElementById('resultTaxBurden').textContent = taxBurden.toFixed(2) + '%';
+            
+            document.getElementById('resultTaxCoefficient').textContent = taxCoefficient.toFixed(4);
+            document.getElementById('resultTaxMultiplier').textContent = taxMultiplier.toFixed(4);
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculateTax();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tax-rate-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tax-rate-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tax-rate-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tax-rate-reference {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .tax-rate-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .tax-rate-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        
+        .tax-rate-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .tax-rate-percent {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .tax-rate-content {
+            flex: 1;
+        }
+        
+        .tax-rate-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .tax-rate-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            .tabs {
+                font-size: 0.875rem;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .tax-rate-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

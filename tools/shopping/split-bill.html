@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分摊计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">分摊计算器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">分摊计算器</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">分摊计算器</h1>
+                            <p class="calculator-description">
+                                计算多人消费时的公平分摊金额，支持AA制和按比例分摊。
+                            </p>
+                        </div>
+                        
+                        <!-- 分摊方式选择 -->
+                        <div class="tabs" id="splitTabs">
+                            <button class="tab active" data-type="equal">AA制均摊</button>
+                            <button class="tab" data-type="custom">自定义比例</button>
+                        </div>
+                        
+                        <!-- 共同输入部分 -->
+                        <div class="input-group">
+                            <label class="input-label">消费总金额 (元)</label>
+                            <input type="number" id="totalBill" class="input-field" placeholder="例如：300" value="300">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">参与人数</label>
+                            <input type="number" id="peopleCount" class="input-field" placeholder="例如：3" value="3" min="1" max="20">
+                        </div>
+                        
+                        <!-- AA制均摊部分 -->
+                        <div id="equalSection">
+                            <!-- 没有额外输入，直接均分 -->
+                        </div>
+                        
+                        <!-- 自定义比例部分 -->
+                        <div id="customSection" style="display: none;">
+                            <div class="proportion-inputs" id="proportionContainer">
+                                <!-- 比例输入框将动态生成 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算分摊
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 分摊结果</h3>
+                            
+                            <div id="splitResult">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">消费总金额</span>
+                                        <span class="result-value" id="resultTotalBill">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">参与人数</span>
+                                        <span class="result-value" id="resultPeopleCount">0 人</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">分摊方式</span>
+                                        <span class="result-value" id="resultSplitType">AA制均摊</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 分摊明细 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">分摊明细</h4>
+                                    <div class="split-details" id="splitDetails">
+                                        <!-- 分摊明细将动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 汇总信息 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">汇总信息</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">每人平均金额</span>
+                                            <span class="result-value" id="resultAverage">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">总误差金额</span>
+                                            <span class="result-value" id="resultError">0.00 元</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 常见场景示例 -->
+                    <div class="split-examples mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-users"></i> 常见分摊场景
+                        </h3>
+                        <div class="examples-grid">
+                            <div class="example-item">
+                                <div class="example-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="example-content">
+                                    <h4>聚餐AA制</h4>
+                                    <p>3人聚餐花费300元，每人100元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-icon">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div class="example-content">
+                                    <h4>旅行费用</h4>
+                                    <p>4人旅行花费8000元，每人2000元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="example-content">
+                                    <h4>合租房租</h4>
+                                    <p>2人合租，大房间700元，小房间500元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="example-content">
+                                    <h4>礼物分摊</h4>
+                                    <p>5人合买800元礼物，每人160元</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>AA制均摊</strong>：总金额除以人数，每人支付相同金额</li>
+                                    <li><strong>自定义比例</strong>：根据每个人的消费比例或约定比例进行分摊</li>
+                                    <li><strong>输入总金额</strong>：需要分摊的总消费金额</li>
+                                    <li><strong>输入人数</strong>：参与分摊的人数（最多20人）</li>
+                                    <li><strong>自动计算</strong>：系统自动计算每个人的分摊金额</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="full-discount.html" class="footer-link">满减计算器</a>
+                    <a href="price-compare.html" class="footer-link">单价对比器</a>
+                    <a href="split-bill.html" class="footer-link">分摊计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 分摊计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 标签页切换
+        document.querySelectorAll('#splitTabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('#splitTabs .tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                // 显示对应的内容区域
+                document.getElementById('equalSection').style.display = type === 'equal' ? 'block' : 'none';
+                document.getElementById('customSection').style.display = type === 'custom' ? 'block' : 'none';
+                
+                // 更新比例输入框
+                updateProportionInputs();
+                
+                // 重新计算
+                setTimeout(() => {
+                    calculateSplit();
+                }, 100);
+            });
+        });
+        
+        // 人数变化时更新比例输入框
+        document.getElementById('peopleCount').addEventListener('input', function() {
+            updateProportionInputs();
+            calculateSplit();
+        });
+        
+        // 输入框变化时自动计算
+        document.querySelectorAll('#totalBill, #peopleCount').forEach(input => {
+            input.addEventListener('input', calculateSplit);
+        });
+        
+        // 更新比例输入框
+        function updateProportionInputs() {
+            const container = document.getElementById('proportionContainer');
+            const peopleCount = parseInt(document.getElementById('peopleCount').value) || 1;
+            const activeTab = document.querySelector('#splitTabs .tab.active').dataset.type;
+            
+            // 只有在自定义比例模式下才显示比例输入框
+            if (activeTab === 'custom') {
+                container.innerHTML = '';
+                
+                // 创建比例输入框
+                for (let i = 1; i <= peopleCount; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'input-group';
+                    div.innerHTML = `
+                        <label class="input-label">第${i}人比例 (%)</label>
+                        <input type="number" class="proportion-input input-field" 
+                               data-index="${i-1}" placeholder="例如：25" value="${Math.round(100/peopleCount)}">
+                    `;
+                    container.appendChild(div);
+                }
+                
+                // 为比例输入框添加事件监听
+                document.querySelectorAll('.proportion-input').forEach(input => {
+                    input.addEventListener('input', calculateSplit);
+                });
+            }
+        }
+        
+        // 计算分摊
+        function calculateSplit() {
+            // 获取输入值
+            const totalBill = parseFloat(document.getElementById('totalBill').value) || 0;
+            const peopleCount = parseInt(document.getElementById('peopleCount').value) || 1;
+            const activeTab = document.querySelector('#splitTabs .tab.active').dataset.type;
+            
+            let splitDetails = [];
+            let totalError = 0;
+            
+            if (activeTab === 'equal') {
+                // AA制均摊
+                const average = totalBill / peopleCount;
+                const roundedAverage = Math.round(average * 100) / 100;
+                
+                // 计算每个人的分摊金额（最后一个人承担剩余金额）
+                let remaining = totalBill;
+                for (let i = 0; i < peopleCount; i++) {
+                    let amount = 0;
+                    if (i < peopleCount - 1) {
+                        amount = roundedAverage;
+                    } else {
+                        amount = Math.round((remaining - roundedAverage * (peopleCount - 1)) * 100) / 100;
+                    }
+                    splitDetails.push({
+                        person: i + 1,
+                        proportion: 100 / peopleCount,
+                        amount: amount
+                    });
+                    remaining -= amount;
+                }
+                
+                // 计算总误差（由于四舍五入可能产生的微小差异）
+                totalError = Math.abs(remaining);
+            } else {
+                // 自定义比例
+                const proportionInputs = document.querySelectorAll('.proportion-input');
+                let totalProportion = 0;
+                let proportions = [];
+                
+                // 收集所有比例
+                proportionInputs.forEach(input => {
+                    const proportion = parseFloat(input.value) || 0;
+                    proportions.push(proportion);
+                    totalProportion += proportion;
+                });
+                
+                // 如果总比例不为100%，则按比例调整
+                if (totalProportion > 0) {
+                    let remaining = totalBill;
+                    
+                    for (let i = 0; i < peopleCount; i++) {
+                        let amount = 0;
+                        if (i < peopleCount - 1) {
+                            amount = Math.round(totalBill * (proportions[i] / totalProportion) * 100) / 100;
+                        } else {
+                            amount = Math.round((remaining - totalBill * (proportions.slice(0, -1).reduce((a, b) => a + b, 0) / totalProportion)) * 100) / 100;
+                        }
+                        splitDetails.push({
+                            person: i + 1,
+                            proportion: proportions[i],
+                            amount: amount
+                        });
+                        remaining -= amount;
+                    }
+                    
+                    totalError = Math.abs(remaining);
+                }
+            }
+            
+            // 显示结果
+            document.getElementById('resultTotalBill').textContent = totalBill.toFixed(2) + ' 元';
+            document.getElementById('resultPeopleCount').textContent = peopleCount + ' 人';
+            document.getElementById('resultSplitType').textContent = activeTab === 'equal' ? 'AA制均摊' : '自定义比例';
+            
+            // 计算平均金额
+            const averageAmount = totalBill / peopleCount;
+            document.getElementById('resultAverage').textContent = averageAmount.toFixed(2) + ' 元';
+            document.getElementById('resultError').textContent = totalError.toFixed(2) + ' 元';
+            
+            // 显示分摊明细
+            const detailsContainer = document.getElementById('splitDetails');
+            detailsContainer.innerHTML = '';
+            
+            splitDetails.forEach(detail => {
+                const detailDiv = document.createElement('div');
+                detailDiv.className = 'split-detail-item';
+                detailDiv.innerHTML = `
+                    <div class="split-person">
+                        <span class="split-person-label">第${detail.person}人</span>
+                        <span class="split-proportion">${detail.proportion.toFixed(1)}%</span>
+                    </div>
+                    <div class="split-amount">${detail.amount.toFixed(2)} 元</div>
+                `;
+                detailsContainer.appendChild(detailDiv);
+            });
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculateSplit();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .proportion-inputs {
+            margin-top: 1rem;
+        }
+        
+        .split-details {
+            margin-top: 1rem;
+        }
+        
+        .split-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .split-person {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .split-person-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .split-proportion {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            padding: 0.125rem 0.5rem;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+        }
+        
+        .split-amount {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+        
+        .split-examples {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .examples-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .example-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .example-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .example-content {
+            flex: 1;
+        }
+        
+        .example-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .example-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            .tabs {
+                font-size: 0.875rem;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

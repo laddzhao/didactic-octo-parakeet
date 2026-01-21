@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>满减计算器 - 生活计算宝典</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../layout.css">
+    <link rel="stylesheet" href="../../components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body class="app">
+    <header class="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-mobile">
+                    <a href="../../pages/shopping.html" class="navbar-back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="navbar-title">满减计算器</div>
+                    <div></div>
+                </div>
+                
+                <div class="navbar-desktop">
+                    <a href="../../index.html" class="logo">
+                        <i class="fas fa-calculator"></i>
+                        <span class="logo-text">生活计算宝典</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="../../index.html" class="nav-link">首页</a>
+                        <a href="../../pages/shopping.html" class="nav-link active">消费购物</a>
+                        <a href="../../pages/finance.html" class="nav-link">理财金融</a>
+                        <a href="../../pages/tools.html" class="nav-link">所有工具</a>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn" aria-label="切换主题">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section">
+            <div class="container">
+                <!-- 面包屑导航 -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-link">首页</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <a href="../../pages/shopping.html" class="breadcrumb-link">消费购物</a>
+                    <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">满减计算器</span>
+                </nav>
+                
+                <!-- 计算器容器 -->
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h1 class="calculator-title">满减计算器</h1>
+                            <p class="calculator-description">
+                                计算满减优惠后的实际支付金额，帮助您判断是否达到优惠门槛。
+                            </p>
+                        </div>
+                        
+                        <!-- 满减条件 -->
+                        <div class="input-group">
+                            <label class="input-label">消费总金额 (元)</label>
+                            <input type="number" id="totalAmount" class="input-field" placeholder="例如：150" value="150">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">满减条件 (满X元)</label>
+                            <input type="number" id="fullCondition" class="input-field" placeholder="例如：100" value="100">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">减免金额 (减Y元)</label>
+                            <input type="number" id="discountAmount" class="input-field" placeholder="例如：20" value="20">
+                        </div>
+                        
+                        <!-- 计算按钮 -->
+                        <button class="btn btn-primary btn-block calc-btn" id="calculateBtn">
+                            <i class="fas fa-calculator"></i> 计算满减
+                        </button>
+                        
+                        <!-- 结果展示 -->
+                        <div class="result-display" id="resultSection" style="display: none;">
+                            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 计算结果</h3>
+                            
+                            <div id="fullDiscountResult">
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <span class="result-label">消费总金额</span>
+                                        <span class="result-value" id="resultTotalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">满减条件</span>
+                                        <span class="result-value" id="resultCondition">满0元减0元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">实际支付</span>
+                                        <span class="result-value" id="resultFinalAmount">0.00 元</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">节省金额</span>
+                                        <span class="result-value" id="resultSavedAmount">0.00 元</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 优惠提示 -->
+                                <div style="margin-top: 1.5rem;">
+                                    <h4 class="result-title" style="font-size: 1rem;">优惠提示</h4>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <span class="result-label">是否达到门槛</span>
+                                            <span class="result-value" id="resultQualified">未达标</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">还需凑单</span>
+                                            <span class="result-value" id="resultNeedMore">0.00 元</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">实际折扣率</span>
+                                            <span class="result-value" id="resultDiscountRate">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 常见满减示例 -->
+                    <div class="full-discount-examples mt-6">
+                        <h3 class="section-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                            <i class="fas fa-tags"></i> 常见满减示例
+                        </h3>
+                        <div class="examples-grid">
+                            <div class="example-item">
+                                <div class="example-condition">满100减20</div>
+                                <div class="example-content">
+                                    <h4>满100减20</h4>
+                                    <p>消费150元，实付130元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-condition">满200减50</div>
+                                <div class="example-content">
+                                    <h4>满200减50</h4>
+                                    <p>消费250元，实付200元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-condition">满300减100</div>
+                                <div class="example-content">
+                                    <h4>满300减100</h4>
+                                    <p>消费350元，实付250元</p>
+                                </div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-condition">满500减150</div>
+                                <div class="example-content">
+                                    <h4>满500减150</h4>
+                                    <p>消费600元，实付450元</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用说明 -->
+                    <div class="alert alert-info mt-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-3"></i>
+                            <div>
+                                <strong>如何使用：</strong> 
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    <li><strong>输入消费金额</strong>：您当前购物车或计划购买的商品总价</li>
+                                    <li><strong>输入满减条件</strong>：商家的优惠活动，如"满100元减20元"</li>
+                                    <li><strong>自动计算</strong>：系统自动判断是否达到优惠门槛并计算实际支付金额</li>
+                                    <li><strong>凑单建议</strong>：如果未达门槛，会提示您还需要凑多少钱才能享受优惠</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <a href="../../index.html" class="footer-logo">
+                        <i class="fas fa-calculator"></i>
+                        <span>生活计算宝典</span>
+                    </a>
+                    <p class="footer-description">
+                        一站式离线计算工具集合，为您的生活带来便利。
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">购物工具</h4>
+                    <a href="discount.html" class="footer-link">折扣计算器</a>
+                    <a href="full-discount.html" class="footer-link">满减计算器</a>
+                    <a href="price-compare.html" class="footer-link">单价对比器</a>
+                    <a href="split-bill.html" class="footer-link">分摊计算器</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">快速链接</h4>
+                    <a href="../../pages/shopping.html" class="footer-link">返回消费购物</a>
+                    <a href="../../pages/tools.html" class="footer-link">所有工具</a>
+                    <a href="https://github.com/laddzhao/life-calculators" target="_blank" class="footer-link">GitHub项目</a>
+                    <a href="../../404.html" class="footer-link">404页面</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">其他工具</h4>
+                    <a href="../home/utility-bill.html" class="footer-link">水电费计算</a>
+                    <a href="../finance/compound.html" class="footer-link">复利计算器</a>
+                    <a href="../health/bmi.html" class="footer-link">BMI计算</a>
+                    <a href="../professional/mortgage.html" class="footer-link">房贷计算器</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 生活计算宝典 · 满减计算器</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航 -->
+    <nav class="mobile-bottom-nav">
+        <a href="../../index.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">首页</span>
+        </a>
+        <a href="../../pages/shopping.html" class="nav-item active">
+            <i class="fas fa-shopping-cart nav-icon"></i>
+            <span class="nav-label">购物</span>
+        </a>
+        <a href="../../pages/finance.html" class="nav-item">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">理财</span>
+        </a>
+        <a href="../../pages/tools.html" class="nav-item">
+            <i class="fas fa-th nav-icon"></i>
+            <span class="nav-label">全部</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span class="nav-label">更多</span>
+        </a>
+    </nav>
+
+    <script>
+        // 输入框变化时自动计算
+        document.querySelectorAll('#totalAmount, #fullCondition, #discountAmount').forEach(input => {
+            input.addEventListener('input', calculateFullDiscount);
+        });
+        
+        // 计算满减
+        function calculateFullDiscount() {
+            // 获取输入值
+            const totalAmount = parseFloat(document.getElementById('totalAmount').value) || 0;
+            const fullCondition = parseFloat(document.getElementById('fullCondition').value) || 0;
+            const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+            
+            // 判断是否达到满减条件
+            let finalAmount = totalAmount;
+            let savedAmount = 0;
+            let qualified = false;
+            let needMore = 0;
+            
+            if (totalAmount >= fullCondition && fullCondition > 0) {
+                // 达到条件，享受优惠
+                finalAmount = totalAmount - discountAmount;
+                savedAmount = discountAmount;
+                qualified = true;
+                needMore = 0;
+            } else {
+                // 未达到条件
+                finalAmount = totalAmount;
+                savedAmount = 0;
+                qualified = false;
+                needMore = fullCondition - totalAmount;
+                if (needMore < 0) needMore = 0;
+            }
+            
+            // 计算实际折扣率
+            const discountRate = totalAmount > 0 ? (savedAmount / totalAmount * 100) : 0;
+            
+            // 显示结果
+            document.getElementById('resultTotalAmount').textContent = totalAmount.toFixed(2) + ' 元';
+            document.getElementById('resultCondition').textContent = `满${fullCondition.toFixed(2)}元减${discountAmount.toFixed(2)}元`;
+            document.getElementById('resultFinalAmount').textContent = finalAmount.toFixed(2) + ' 元';
+            document.getElementById('resultSavedAmount').textContent = savedAmount.toFixed(2) + ' 元';
+            
+            // 优惠提示
+            document.getElementById('resultQualified').textContent = qualified ? '已达标' : '未达标';
+            document.getElementById('resultQualified').style.color = qualified ? 'var(--success)' : 'var(--danger)';
+            document.getElementById('resultNeedMore').textContent = needMore.toFixed(2) + ' 元';
+            document.getElementById('resultDiscountRate').textContent = discountRate.toFixed(2) + '%';
+            
+            // 显示结果区域
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // 主题切换
+        function initTheme() {
+            const themeBtn = document.querySelector('.theme-btn');
+            
+            // 检查本地存储的主题设置
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            // 切换主题函数
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                if (themeBtn) {
+                    const icon = themeBtn.querySelector('i');
+                    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // 添加事件监听
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // 页面加载时自动计算一次
+            calculateFullDiscount();
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('移动端菜单功能需要完整的菜单HTML结构');
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .full-discount-examples {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .examples-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .example-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .example-condition {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            text-align: center;
+            padding: 0.25rem;
+        }
+        
+        .example-content {
+            flex: 1;
+        }
+        
+        .example-content h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .example-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
